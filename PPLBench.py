@@ -39,22 +39,26 @@ def get_color_for_ppl(ppl):
     Outputs:
     - color for matplotlib
     """
-    colors = {
-        "nmc": "C0",
-        "pyro": "C1",
-        "stan": "C2",
-        "jags": "C3",
-        "bootstrapping": "C4",
-        "beanmachine": "C6",
-        "pymc3": "C7",
-        "beanmachine-vectorized": "C8",
-        "numpyro": "C9",
-    }
-    if ppl in colors:
-        return colors[ppl]
+    ppl_list = [
+        "nmc",
+        "bmgraph",
+        "stan",
+        "beanmachine",
+        "beanmachine-vectorized",
+        "jags",
+        "bootstrapping",
+        "pymc3",
+        "numpyro",
+        "pyro",
+    ]
+    cmap = plt.get_cmap("tab20")
+    if ppl not in ppl_list:
+        print(f"Please add ppl name to get_color_for_ppl() in PPLBench.py for {ppl}")
+        index = len(ppl_list)
     else:
-        print(f"Please set color in get_color_for_ppl() in PPLBench.py for {ppl}")
-        return "C10"
+        index = ppl_list.index(ppl)
+
+    return cmap(index / len(ppl_list))
 
 
 def generate_plot(posterior_predictive, args_dict):
