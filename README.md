@@ -1,8 +1,13 @@
-# Readme: Getting Started with PPLBench
+# Getting Started with PPLBench
 
 ## What is PPLBench?
 
 PPLBench is a benchmarking tool for analyzing the performance of various PPLs in context of their ability to implement one or more of the popular Bayesian models. It is designed to be modular so new models and PPL implementations of models can be added into this framework. The fundamental evaluation metric is the average log predictive log likelihood on test set, though more model specific evaluations could be added later.
+
+## License
+
+This source code is licensed under the MIT license found in the
+LICENSE file in the root directory of this source tree.
 
 ## How to use PPLBench?
 
@@ -37,7 +42,7 @@ Following is the procedure to install PPLBench on Linux (Tested on Ubuntu 16.04)
 Let us go through an example to check if the installation is working. From the PPLBench directory, run the following command:
 
 ```
-python PPLBench.py -m robustRegression -l jags,stan  -k 5 -n 2000 -t 30 --trials 2
+python PPLBench.py -m robust_regression -l jags,stan  -k 5 -n 2000 -t 30 --trials 2
 ```
 
 this should take around 2-4 mins to complete and should produce a result similar to this:
