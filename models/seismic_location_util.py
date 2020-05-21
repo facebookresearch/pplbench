@@ -26,8 +26,6 @@ stations = tensor(
 
 
 def convert_degrees_to_radians(deg: Tensor) -> Tensor:
-    # pyre-fixme[7]: Expected `Tensor` but got `float`.
-    # pyre-fixme[7]: Expected `Tensor` but got `float`.
     return torch.mul(deg, np.pi) / 180
 
 
@@ -225,7 +223,7 @@ class FiniteExponential(Distribution):
 
     def log_prob(self, value):
         scale_constant = np.log(self.scale)
-        constant = -np.log(1 - np.exp(-(self.max - self.min) / self.scale))
+        constant = -(np.log(1 - np.exp(-(self.max - self.min) / self.scale)))
         return -scale_constant + constant - ((value - self.min) / self.scale)
 
 
