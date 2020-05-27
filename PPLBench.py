@@ -93,10 +93,9 @@ def generate_plot(posterior_predictive, args_dict):
                 n = tensor(1.0 + i, dtype=ppl_data.dtype)
                 log_pred[t, i] = pred - torch.log(n)
         samples = 1.0 + torch.arange(num_samples, dtype=ppl_data.dtype)
-        avg_log = torch.cumsum(log_pred, 1) / samples
-        group_avg = torch.mean(avg_log, dim=0)
-        group_min, _ = torch.min(avg_log, dim=0)
-        group_max, _ = torch.max(avg_log, dim=0)
+        group_avg = torch.mean(log_pred, dim=0)
+        group_min, _ = torch.min(log_pred, dim=0)
+        group_max, _ = torch.max(log_pred, dim=0)
         ppl_color = get_color_for_ppl(ppl_name)
         label = args_dict[f"legend_name_{ppl_name}"]
         (line,) = plt.plot(samples, group_avg, color=ppl_color, label=label)
@@ -181,18 +180,16 @@ def get_sample_subset(posterior_predictive, args_dict):
 
     for ppl in posterior_predictive:
         ppl_data = tensor(posterior_predictive[ppl])[:, -num_samples:]
-        log_pred = torch.zeros(num_trials, num_samples, dtype=ppl_data.dtype)
+        log_pred_lik = torch.zeros(num_trials, num_samples, dtype=ppl_data.dtype)
         for t in range(num_trials):
             for i in range(num_samples):
                 pred = torch.logsumexp(ppl_data[t, : i + 1], 0)
                 n = tensor(1.0 + i, dtype=ppl_data.dtype)
-                log_pred[t, i] = pred - torch.log(n)
-        samples = 1.0 + torch.arange(num_samples, dtype=ppl_data.dtype)
-        avg_log = torch.cumsum(log_pred, 1) / samples
+                log_pred_lik[t, i] = pred - torch.log(n)
         for t in range(num_trials):
             for i in indices:
                 log_pred = ppl_data[t][i].item()
-                avg_log_pred = avg_log[t][i].item()
+                avg_log_pred = log_pred_lik[t][i].item()
                 sample_subset.append((ppl, t, i, log_pred, avg_log_pred))
     return sample_subset
 
