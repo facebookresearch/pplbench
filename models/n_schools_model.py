@@ -10,12 +10,33 @@ generate_data()
 evaluate_posterior_predictive()
 
 Model Specification:
-A hierarchical model depicting school-level student SAT scores
-beta_0: average score level
-beta_state: state level
-beta_district: district level, nested within state
-beta_type: non-nested school type effect
-y_i: SAT score ~ Normal(beta_0 + beta_state + beta_district + beta_type, sei)
+A hierarchical model depicting school-level student SAT score improvement
+
+average school effect:
+
+beta_0 ~ StudentT(dof=3, loc=0.0, scale=10.0)
+
+state level effect:
+
+sd_state ~ HalfCauchy(1)
+beta_state ~ Normal(0, sd_state)
+
+district level effect, nested within state:
+
+sd_state_district ~ HalfCauchy(1)
+beta_state_district ~ Normal(0, sd_state_district)
+
+non-nested school type effect:
+
+sd_type ~ HalfCauchy(1)
+beta_type  ~ Normal(0, sd_type)
+
+SAT score mean % change for i th school:
+
+y_i ~ Normal(beta_0 + beta_state + beta_state_district + beta_type, sei)
+
+where the state, district, and type are of the i th school and sei is the standard
+deviation of the observed effect at the school.
 
 Model specific arguments:
 return number of states, districts, and school types
@@ -26,16 +47,11 @@ import pandas as pd
 import torch
 import torch.distributions as dist
 import torch.tensor as tensor
+from tqdm import tqdm
 
 
 def get_defaults():
-    defaults = {
-        "n": 2000,
-        "k": 10,
-        "runtime": 200,
-        "model_args": "8,5,5",
-        "train_test_ratio": 0.5,
-    }
+    defaults = {"n": 2000, "k": 10, "model_args": [8, 5, 5], "train_test_ratio": 0.5}
     return defaults
 
 
@@ -89,7 +105,7 @@ def generate_data(args_dict, model):
         beta_type = beta_types[school_type]
 
         yhat = beta_0 + beta_state + beta_district + beta_type
-        sei = dist.Uniform(0.5, 1.5).sample()
+        sei = dist.Uniform(0.5, 1.5).sample().item()
 
         yi = dist.Normal(yhat, sei).sample().item()
         data_train.append((yi, sei, state, district, school_type))
@@ -121,7 +137,7 @@ def evaluate_posterior_predictive(samples, data_test, model):
     :returns: log-likelihoods of data wrt parameter samples
     """
     pred_llh = []
-    for s in samples:
+    for s in tqdm(samples, desc="eval", leave=False):
         llh = tensor(0.0)
         for _, row in data_test.iterrows():
             yi = row["yi"]
