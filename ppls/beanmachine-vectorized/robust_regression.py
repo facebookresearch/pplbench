@@ -2,13 +2,10 @@
 import time
 from typing import Any, Dict, List, Tuple
 
+import beanmachine.ppl as bm
 import torch
 import torch.distributions as dist
 import torch.tensor as tensor
-from beanmachine.ppl.inference.single_site_newtonian_monte_carlo import (
-    SingleSiteNewtonianMonteCarlo,
-)
-from beanmachine.ppl.model.statistical_model import sample
 from torch import Tensor
 
 
@@ -42,22 +39,22 @@ class RobustRegressionModel(object):
         self.X = torch.cat((torch.ones((1, N)), X))
         self.Y = Y
 
-    @sample
+    @bm.random_variable
     def nu(self):
         return dist.Gamma(2.0, 0.1)
 
-    @sample
+    @bm.random_variable
     def sigma(self):
         return dist.Exponential(self.rate_sigma)
 
-    @sample
+    @bm.random_variable
     def beta(self):
         return dist.Normal(
             tensor([0.0] + [self.loc_beta] * self.K),
             tensor([self.scale_alpha] + self.scale_beta),
         )
 
-    @sample
+    @bm.random_variable
     def y(self):
         # Compute X * Beta
         beta_ = self.beta().reshape((1, self.beta().shape[0]))
@@ -66,7 +63,7 @@ class RobustRegressionModel(object):
 
     def infer(self):
         if self.inference_type == "mcmc":
-            mh = SingleSiteNewtonianMonteCarlo()
+            mh = bm.SingleSiteNewtonianMonteCarlo()
             start_time = time.time()
             samples = mh.infer(
                 [self.beta(), self.nu(), self.sigma()],

@@ -3,10 +3,9 @@
 import time
 from typing import Dict, List, Optional, Tuple
 
+import beanmachine.ppl as bm
 import torch
 import torch.distributions as dist
-from beanmachine.ppl.inference.compositional_infer import CompositionalInference
-from beanmachine.ppl.model.statistical_model import sample
 from torch import Tensor, tensor
 
 
@@ -36,20 +35,20 @@ class HiddenMarkovModel(object):
         self.sigma_rate = sigma_rate
         self.model = model
 
-    @sample
+    @bm.random_variable
     def Theta(self, k):
         return dist.Dirichlet(torch.ones(self.K) * self.concentration / self.K)
 
-    @sample
+    @bm.random_variable
     def Mu(self, k):
         return dist.Normal(self.mu_loc, self.mu_scale)
 
-    @sample
+    @bm.random_variable
     def Sigma(self, k):
         return dist.Gamma(self.sigma_shape, self.sigma_rate)
 
     # Hidden states
-    @sample
+    @bm.random_variable
     def X(self, n: int):
         if n == 0:
             return dist.Categorical(tensor([1.0] + [0.0] * (self.K - 1)))
@@ -57,12 +56,12 @@ class HiddenMarkovModel(object):
             return dist.Categorical(self.Theta(self.X(n - 1).item()))
 
     # Noisy observations/emissions
-    @sample
+    @bm.random_variable
     def Y(self, n: int):
         return dist.Normal(self.Mu(self.X(n).item()), self.Sigma(self.X(n).item()))
 
     def infer(self):
-        mh = CompositionalInference()
+        mh = bm.CompositionalInference()
         queries = [self.X(self.N - 1)]
         if not self.model:
             queries += (

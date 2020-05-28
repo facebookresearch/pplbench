@@ -1,8 +1,8 @@
+import beanmachine.ppl as bm
 import benchmarks.pplbench.models.seismic_location_util as seismic
 import torch
 import torch.distributions as dist
 import torch.tensor as tensor
-from beanmachine.ppl.model.statistical_model import sample
 from torch import Tensor
 
 
@@ -13,21 +13,21 @@ class SeismicProjectionModel(object):
         self.mu_k_z = 0
         self.mu_k_s = 0
 
-    @sample
+    @bm.random_variable
     def event(self):
         return seismic.StereographicProjectionUniform()
 
-    @sample
+    @bm.random_variable
     def event_magnitude(self):
         return seismic.FiniteExponential(3.0, 4.0, 6.0)
 
-    @sample
+    @bm.random_variable
     def theta_k(self):
         alpha = tensor([120, 5.2, 6.7]).unsqueeze(0).expand(10, 3)
         beta = tensor([118, 44, 7.5]).unsqueeze(0).expand(10, 3)
         return seismic.InverseGamma(alpha, beta)
 
-    @sample
+    @bm.random_variable
     def mu_k_d(self):
         mean = tensor([-10.4, 3.26, -0.0499])
         cov = tensor(
@@ -41,7 +41,7 @@ class SeismicProjectionModel(object):
         cov = cov.unsqueeze(0).expand(10, 3, 3)
         return dist.MultivariateNormal(mean, cov)
 
-    @sample
+    @bm.random_variable
     def is_detected(self):
         mu = self.mu_k_d()
 
@@ -58,7 +58,7 @@ class SeismicProjectionModel(object):
         )
         return dist.Bernoulli(detection_prob[1:])
 
-    @sample
+    @bm.random_variable
     def holdout_is_detected(self):
         mu = self.mu_k_d()
 
@@ -97,7 +97,7 @@ class SeismicProjectionModel(object):
             dim=1,
         )
 
-    @sample
+    @bm.random_variable
     def detection(self):
         mask = self.is_detected().expand(3, 9).transpose(0, 1)
         detection_loc = self.compute_detection_loc(self.event())

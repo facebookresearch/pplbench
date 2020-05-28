@@ -1,12 +1,11 @@
 import time
 from typing import Dict, List, Tuple
 
+import beanmachine.ppl as bm
 import numpy as np
 import torch
 import torch.distributions as dist
-from beanmachine.ppl.inference.compositional_infer import CompositionalInference
 from beanmachine.ppl.inference.monte_carlo_samples import MonteCarloSamples
-from beanmachine.ppl.model.statistical_model import sample
 from torch import tensor
 
 
@@ -77,22 +76,22 @@ class CrowdSourcedAnnotationModel(object):
 
     # probability labeler j will label item with true label k as items 1..K
     # shape (num_labelers, num_categories)
-    @sample
+    @bm.random_variable
     def theta(self, j: int, k: int):
         return dist.Dirichlet(self.alpha[k])
 
     # prevalence of category classes
-    @sample
+    @bm.random_variable
     def pi(self):
         return dist.Dirichlet(self.beta)
 
     # true label for item i
-    @sample
+    @bm.random_variable
     def z(self, i: int):
         return dist.Categorical(self.pi())
 
     # this is observed data. Label given to item i by labeler j
-    @sample
+    @bm.random_variable
     def y(self, i: int, j: int):
         return dist.Categorical(self.theta(j, self.z(i).item()))
 
@@ -105,7 +104,7 @@ class CrowdSourcedAnnotationModel(object):
                 observed_dict[self.y(i, self.J_ij[i][j])] = tensor(self.Y_ij[i][j])
 
         if self.inference_type == "mcmc":
-            mh = CompositionalInference()
+            mh = bm.CompositionalInference()
             start_time = time.time()
             samples = mh.infer(
                 [self.pi()]
