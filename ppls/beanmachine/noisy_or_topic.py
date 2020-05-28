@@ -1,13 +1,10 @@
 # Copyright (c) Facebook, Inc. and its affiliates
 import time
 
+import beanmachine.ppl as bm
 import numpy as np
 import torch
 import torch.distributions as dist
-from beanmachine.ppl.inference.single_site_newtonian_monte_carlo import (
-    SingleSiteNewtonianMonteCarlo,
-)
-from beanmachine.ppl.model.statistical_model import sample
 
 
 class NoisyOrModel(object):
@@ -20,7 +17,7 @@ class NoisyOrModel(object):
 
     # leak node is always on
     # i = 1 to T - 1
-    @sample
+    @bm.random_variable
     def node(self, i):
         parent_accumulator = torch.tensor(0.0)
         for par, wt in enumerate(self.graph[:, i]):
@@ -30,7 +27,7 @@ class NoisyOrModel(object):
         return dist.Bernoulli(prob)
 
     # here j is the index of the words, so j starts from T
-    @sample
+    @bm.random_variable
     def y(self, j):
         parent_accumulator = torch.tensor(0.0)
         for par, wt in enumerate(self.graph[:, j]):
@@ -43,7 +40,7 @@ class NoisyOrModel(object):
         dict_y = {self.y(k + self.T): self.words[k] for k in range(len(self.words))}
         dict_y[self.node(0)] = torch.tensor(1.0)
         if self.inference_type == "mcmc":
-            nmc = SingleSiteNewtonianMonteCarlo()
+            nmc = bm.SingleSiteNewtonianMonteCarlo()
             start_time = time.time()
             samples = nmc.infer(
                 [self.node(i) for i in range(1, self.T)], dict_y, self.iterations, 1

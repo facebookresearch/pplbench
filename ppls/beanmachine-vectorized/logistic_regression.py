@@ -2,14 +2,11 @@
 import time
 from typing import Any, Dict, List, Tuple
 
+import beanmachine.ppl as bm
 import numpy as np
 import torch
 import torch.distributions as dist
 import torch.tensor as tensor
-from beanmachine.ppl.inference.single_site_newtonian_monte_carlo import (
-    SingleSiteNewtonianMonteCarlo,
-)
-from beanmachine.ppl.model.statistical_model import sample
 from torch import Tensor
 
 
@@ -41,14 +38,14 @@ class LogisticRegressionModel(object):
         self.X = torch.cat((torch.ones((1, N)), X))
         self.Y = Y
 
-    @sample
+    @bm.random_variable
     def beta(self):
         return dist.Normal(
             tensor([0.0] + [self.loc_beta] * self.K),
             tensor([self.scale_alpha] + self.scale_beta),
         )
 
-    @sample
+    @bm.random_variable
     def y(self):
         # Compute X * Beta
         beta_ = self.beta().reshape((1, self.beta().shape[0]))
@@ -58,7 +55,7 @@ class LogisticRegressionModel(object):
     def infer(self):
         dict_y = {self.y(): self.Y}
         if self.inference_type == "mcmc":
-            nmc = SingleSiteNewtonianMonteCarlo()
+            nmc = bm.SingleSiteNewtonianMonteCarlo()
             start_time = time.time()
             samples = nmc.infer([self.beta()], dict_y, self.num_samples, 1).get_chain()
         elif self.inference_type == "vi":

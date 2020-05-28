@@ -2,13 +2,10 @@
 import time
 from typing import Any, Dict, List, Tuple
 
+import beanmachine.ppl as bm
 import torch
 import torch.distributions as dist
 import torch.tensor as tensor
-from beanmachine.ppl.inference.single_site_ancestral_mh import (
-    SingleSiteAncestralMetropolisHastings,
-)
-from beanmachine.ppl.model.statistical_model import sample
 from torch import Tensor
 
 
@@ -42,23 +39,23 @@ class RobustRegressionModel(object):
         self.X = X
         self.Y = Y
 
-    @sample
+    @bm.random_variable
     def nu(self):
         return dist.Gamma(2.0, 0.1)
 
-    @sample
+    @bm.random_variable
     def sigma(self):
         return dist.Exponential(self.rate_sigma)
 
-    @sample
+    @bm.random_variable
     def alpha(self):
         return dist.Normal(0, self.scale_alpha)
 
-    @sample
+    @bm.random_variable
     def beta(self, k: int):
         return dist.Normal(self.loc_beta, self.scale_beta)
 
-    @sample
+    @bm.random_variable
     def y(self, i: int):
         # Compute X * Beta
         mean = self.alpha()
@@ -70,7 +67,7 @@ class RobustRegressionModel(object):
         dict_y = {self.y(i): self.Y[i] for i in range(self.N)}
         if self.inference_type == "mcmc":
             samples_beta = torch.zeros([self.num_samples, self.K])
-            mh = SingleSiteAncestralMetropolisHastings()
+            mh = bm.SingleSiteAncestralMetropolisHastings()
             start_time = time.time()
             samples = mh.infer(
                 [self.nu(), self.sigma(), self.alpha()]
@@ -125,9 +122,11 @@ def obtain_posterior(
         Tensor(y_train),
     )
     elapsed_time_compile_beanmachine = time.time() - start_time
-    samples_beta, samples, elapsed_time_sample_beanmachine = (
-        robust_regression_model.infer()
-    )
+    (
+        samples_beta,
+        samples,
+        elapsed_time_sample_beanmachine,
+    ) = robust_regression_model.infer()
 
     # repackage samples into format required by PPLBench
     # List of dict, where each dict has key = param (string), value = value of param
