@@ -1,3 +1,5 @@
+# Copyright(C) Facebook, Inc. and its affiliates. All Rights Reserved.
+
 import time
 
 # pyre-fixme[21]: Could not find `jax`.

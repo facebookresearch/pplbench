@@ -1,3 +1,5 @@
+# Copyright(C) Facebook, Inc. and its affiliates. All Rights Reserved.
+
 import beanmachine.ppl as bm
 import benchmarks.pplbench.models.seismic_location_util as seismic
 import torch

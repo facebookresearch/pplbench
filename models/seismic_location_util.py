@@ -1,3 +1,5 @@
+# Copyright(C) Facebook, Inc. and its affiliates. All Rights Reserved.
+
 from typing import Tuple
 
 import numpy as np

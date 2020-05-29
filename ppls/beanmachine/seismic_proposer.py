@@ -1,3 +1,5 @@
+# Copyright(C) Facebook, Inc. and its affiliates. All Rights Reserved.
+
 from typing import Dict, Tuple
 
 import benchmarks.pplbench.models.seismic_location_util as seismic
