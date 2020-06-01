@@ -25,7 +25,7 @@ import numpy as np
 import pandas as pd
 import torch
 import torch.distributions as dist
-import torch.tensor as tensor
+from scipy.stats import norm
 
 
 def get_defaults():
@@ -41,7 +41,7 @@ def get_defaults():
 
 def generate_model(args_dict):
     """
-    Generate parameters for seismic model.
+    Generate parameters for n schools model.
 
     :param args_dict: arguments dictionary
     :returns: None
@@ -110,35 +110,42 @@ def evaluate_posterior_predictive(samples, data_test, model):
     """
     Computes the likelihood of held-out testset wrt parameter samples
 
-    :param samples: list of dictionaries with format {
-        "beta_0": value of beta_0
-        ("beta_state", s (int)): value of beta_state for state s
-        ("beta_district", s (int), d(int)): value of beta_state for state s district d
-        ("beta_type", t (int)): value of beta_type for school type t
-    }
+    :param samples: posterior samples in a form of a pandas DataFrame
+    with columns as different random varialbles and rows are
+    samples (iterations of MCMC).
+
     :param data_test: test data
     :param model: dictionary with number of states, districts, and school types
     :returns: log-likelihoods of data wrt parameter samples
     """
-    pred_llh = []
-    for s in samples:
-        llh = tensor(0.0)
-        for _, row in data_test.iterrows():
-            yi = row["yi"]
-            sei = row["sei"]
-            state = row["state"]
-            district = row["district"]
-            school_type = row["type"]
+    pll_df = pd.DataFrame()
+    rvs = samples.columns
+    for index, row in data_test.iterrows():
+        yhat = samples["beta_0"].copy().values
 
-            beta_0 = s["beta_0"]
-            beta_state = s[("beta_state", state)]
-            beta_district = s[("beta_district", state, district)]
-            beta_type = s[("beta_type", school_type)]
+        # dealing with school type
+        ky_tmp = f"beta_type_{row.type}"
+        if ky_tmp not in rvs:
+            continue
+        else:
+            yhat += samples[ky_tmp].copy().values
 
-            yhat = beta_0 + beta_state + beta_district + beta_type
-            llh += dist.Normal(yhat, sei).log_prob(yi).sum()
+        # dealing with state
+        ky_tmp = f"beta_state_{row.state}"
+        if ky_tmp not in rvs:
+            continue
+        else:
+            yhat += samples[ky_tmp].copy().values
 
-        pred_llh.append(llh)
+        # dealing with state:district
+        ky_tmp = f"beta_state_{row.state}_district_{row.district}"
+        if ky_tmp not in rvs:
+            continue
+        else:
+            yhat += samples[ky_tmp].copy().values
 
-    # return as a numpy array
-    return np.array(pred_llh)
+        likelihood = norm.pdf(yhat, loc=0, scale=row.sei)
+        pll_df[f"yhati[{index}]"] = likelihood
+
+    pll = np.log(pll_df.sum(axis=1)).copy().values
+    return pll
