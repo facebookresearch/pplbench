@@ -124,21 +124,21 @@ def evaluate_posterior_predictive(samples, data_test, model):
         yhat = samples["beta_0"].copy().values
 
         # dealing with school type
-        ky_tmp = f"beta_type_{row.type}"
+        ky_tmp = f"beta_type_{int(row.type)}"
         if ky_tmp not in rvs:
             continue
         else:
             yhat += samples[ky_tmp].copy().values
 
         # dealing with state
-        ky_tmp = f"beta_state_{row.state}"
+        ky_tmp = f"beta_state_{int(row.state)}"
         if ky_tmp not in rvs:
             continue
         else:
             yhat += samples[ky_tmp].copy().values
 
         # dealing with state:district
-        ky_tmp = f"beta_state_{row.state}_district_{row.district}"
+        ky_tmp = f"beta_state_{int(row.state)}_district_{int(row.district)}"
         if ky_tmp not in rvs:
             continue
         else:
