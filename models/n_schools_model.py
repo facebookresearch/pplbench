@@ -10,15 +10,48 @@ generate_data()
 evaluate_posterior_predictive()
 
 Model Specification:
-A hierarchical model depicting school-level student SAT scores
-beta_0: average score level
-beta_state: state level
-beta_district: district level, nested within state
-beta_type: non-nested school type effect
-y_i: SAT score ~ Normal(beta_0 + beta_state + beta_district + beta_type, sei)
+A hierarchical model depicting school-level student SAT score improvement
+
+average school effect:
+
+beta_0 ~ StudentT(dof=3, loc=0.0, scale=10.0)
+
+state level effect:
+
+sd_state ~ HalfCauchy(1)
+
+for i in range(num_states):
+    beta_state[i] ~ Normal(0, sd_state)
+
+district level effect, nested within state:
+
+sd_district ~ HalfCauchy(1)
+
+for i in range(num_states):
+    for j in range(num_districts):
+        beta_district[i, j] ~ Normal(0, sd_district)
+
+non-nested school type effect:
+
+sd_type ~ HalfCauchy(1)
+
+for k in range(num_school_types):
+    beta_type[k]  ~ Normal(0, sd_type)
+
+SAT score mean % change for n th school:
+
+y[n] ~ Normal(beta_0 + beta_state[i[n]] + beta_district[i[n], j[n]] + beta_type[k[n]], sei[n])
+
+where the i[n], j[n], and k[n] are the state, district, and type respectively of
+the n th school and sei[n] is the standard deviation of the observed effect at the school.
+
+Inference Task:
+    Given y[n], i[n], j[n], k[n], and sei[n]
+    Infer beta_0, beta_state[], beta_district[,], and beta_type[]
+    Also infer sd_type, sd_state, and sd_district
 
 Model specific arguments:
-return number of states, districts, and school types
+    (num_states, num_districts, num_school_types)
 """
 
 import numpy as np
@@ -69,13 +102,13 @@ def generate_data(args_dict, model):
 
     beta_0 = dist.StudentT(3, 0.0, 10.0).sample()
 
-    sd_states = dist.HalfCauchy(torch.ones(num_states)).sample()
-    sd_districts = dist.HalfCauchy(torch.ones(num_states, num_districts)).sample()
-    sd_types = dist.HalfCauchy(torch.ones(num_types)).sample()
+    sd_state = dist.HalfCauchy(1.0).sample()
+    sd_district = dist.HalfCauchy(1.0).sample()
+    sd_type = dist.HalfCauchy(1.0).sample()
 
-    beta_states = dist.Normal(0.0, sd_states).sample()
-    beta_districts = dist.Normal(0.0, sd_districts).sample()
-    beta_types = dist.Normal(0.0, sd_types).sample()
+    beta_states = dist.Normal(0.0, sd_state).sample((num_states,))
+    beta_districts = dist.Normal(0.0, sd_district).sample((num_states, num_districts))
+    beta_types = dist.Normal(0.0, sd_type).sample((num_types,))
 
     data_train = []
     data_test = []
@@ -89,7 +122,7 @@ def generate_data(args_dict, model):
         beta_type = beta_types[school_type]
 
         yhat = beta_0 + beta_state + beta_district + beta_type
-        sei = dist.Uniform(0.5, 1.5).sample()
+        sei = dist.Uniform(0.5, 1.5).sample().item()
 
         yi = dist.Normal(yhat, sei).sample().item()
         data_train.append((yi, sei, state, district, school_type))
