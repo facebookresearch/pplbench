@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Tuple
 # pyre-ignore-all-errors
 import beanmachine.graph as bmg
 import numpy as np
+import pandas as pd
 
 
 def obtain_posterior(
@@ -53,18 +54,18 @@ def obtain_posterior(
         bmg.DistributionType.NORMAL, bmg.AtomicType.REAL, [zero, sd_district]
     )
     for state in range(num_states):
-        nodeidx["beta_state", state] = g.add_operator(
+        nodeidx[f"beta_state_{state}"] = g.add_operator(
             bmg.OperatorType.SAMPLE, [beta_state_prior]
         )
         for district in range(num_districts):
-            nodeidx["beta_district", state, district] = g.add_operator(
+            nodeidx[f"beta_state_{state}_district_{district}"] = g.add_operator(
                 bmg.OperatorType.SAMPLE, [beta_district_prior]
             )
     for type_ in range(num_types):
         beta_type_prior = g.add_distribution(
             bmg.DistributionType.NORMAL, bmg.AtomicType.REAL, [zero, sd_type]
         )
-        nodeidx["beta_type", type_] = g.add_operator(
+        nodeidx[f"beta_type_{type_}"] = g.add_operator(
             bmg.OperatorType.SAMPLE, [beta_type_prior]
         )
 
@@ -75,9 +76,9 @@ def obtain_posterior(
             bmg.OperatorType.ADD,
             [
                 nodeidx["beta_0"],
-                nodeidx["beta_state", row.state],
-                nodeidx["beta_district", row.state, row.district],
-                nodeidx["beta_type", row.type],
+                nodeidx[f"beta_state_{row.state}"],
+                nodeidx[f"beta_state_{row.state}_district_{row.district}"],
+                nodeidx[f"beta_type_{row.type}"],
             ],
         )
         sei = g.add_constant_pos_real(row.sei)
@@ -94,17 +95,13 @@ def obtain_posterior(
     compile_time = time.time() - compile_start
     infer_start = time.time()
     seed = np.random.randint(1000, 1000000)
-    samples = g.infer(args_dict["num_samples"], bmg.InferenceType.NMC, seed)
+    samples = np.array(g.infer(args_dict["num_samples"], bmg.InferenceType.NMC, seed))
     infer_time = time.time() - infer_start
     timing_info = {"compile_time": compile_time, "inference_time": infer_time}
 
-    sample_dicts = []
-    for sample in samples:
-        dict_ = {}
-        for nodename, queryid in queryidx.items():
-            dict_[nodename] = sample[queryid]
-        sample_dicts.append(dict_)
-
+    sample_dataframe = pd.DataFrame()
+    for nodename, queryid in queryidx.items():
+        sample_dataframe[nodename] = samples[:, queryid]
     print(f"bmgraph inference time {infer_time:.1f}")
 
-    return sample_dicts, timing_info
+    return sample_dataframe, timing_info
