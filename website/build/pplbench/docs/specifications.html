@@ -1,0 +1,225 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>PPLBench System Specification · PPLBench</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## Abstract"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="PPLBench System Specification · PPLBench"/><meta property="og:type" content="website"/><meta property="og:url" content="https://pplbench.org/"/><meta property="og:description" content="## Abstract"/><meta property="og:image" content="https://pplbench.org/img/favicon.png"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://pplbench.org/img/favicon.png"/><link rel="shortcut icon" href="/img/favicon.png"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="stylesheet" href="/css/code_block_buttons.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script type="text/javascript" src="/js/code_block_buttons.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script><script type="text/javascript" src="/js/mathjax.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS_HTML"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
+        document.addEventListener('DOMContentLoaded', function() {
+          addBackToTop(
+            {"zIndex":100}
+          )
+        });
+        </script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/pplbench_logo_full_color.png" alt="PPLBench"/><h2 class="headerTitleWithLogo">PPLBench</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/docs/introduction" target="_self">Docs</a></li><li class=""><a href="https://github.com/facebookresearch/pplbench" target="_self">GitHub</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>About</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">About</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/introduction">Introduction</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/docs/specifications">PPLBench System Specification</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">General</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/getting_started">Getting Started</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Basic Concepts</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/overview">Basic Concept - Overview</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><a class="edit-page-link button" href="https://github.com/facebookresearch/pplbench/tree/master/docs/specifications.md" target="_blank" rel="noreferrer noopener">Edit</a><h1 id="__docusaurus" class="postHeaderTitle">PPLBench System Specification</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="abstract"></a><a href="#abstract" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Abstract</h2>
+<p>PPLBench is a benchmark for analyzing and comparing the accuracy and performance of Probabilistic Programming Languages and Libraries (PPLs) over various probabilistic models. It is designed to be open and modular such that contributors can add new models, PPL implementations, and evaluation metrics to the benchmark.
+The typical PPLBench flow will be as follows:</p>
+<ul>
+<li>Establish a model with ground-truth parameter distributions; simulate train and test data from this model.</li>
+<li>Using the training data, train various PPL implementations; obtain posterior samples of parameters and timing information.</li>
+<li>Use test data, posterior samples and timing information to compare PPL implementations on various evaluation metrics.</li>
+</ul>
+<h2><a class="anchor" aria-hidden="true" id="system-specification"></a><a href="#system-specification" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>System Specification</h2>
+<h3><a class="anchor" aria-hidden="true" id="project-directory-layout"></a><a href="#project-directory-layout" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Project directory Layout:</h3>
+<pre><code class="hljs">`/README.md - getting started <span class="hljs-literal">and</span> running an example model`
+`/PPLBench.py - main script`
+`/models/&lt;model name&gt;Model.py - individual python files each containing a model module`
+`/ppls/&lt;PPL name&gt;/&lt;model name&gt;.py`
+`/docs/specifications.md - detailed documentation`
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="overview"></a><a href="#overview" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Overview:</h3>
+<p>PPLBench will be implemented in python3. Each Model in PPLBench will have a module in ‘models/’ directory. The PPL implementations of each model will be organized in the ‘ppls/’ directory.  The ‘PPLBench’ code will consist of initializing the relevant model class based on CLI user inputs and displaying/storing output files.
+[Image: assets/system_overview.png]</p>
+<h3><a class="anchor" aria-hidden="true" id="model-module-specifications"></a><a href="#model-module-specifications" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Model Module Specifications:</h3>
+<ul>
+<li>Every Model should consist of module description on top. This should contain the name of the model, methods contained in the module, Model specification, and the order in which to pass model-specific arguments</li>
+<li>There shall be one and only one data generation method (<code>generate_data()</code>) for simulating train and test data. Method may only use numpy and scipy packages, and cannot use PPLs. The data generation should use a standard random number generator and use a fixed seed that can be user-specified through the option (<code>--rng-seed</code>). This is to ensure that the results can be reproduced.
+<ul>
+<li>Inputs: model specifications, ground-truth parameter distributions</li>
+<li>Outputs: simulated train and test data, ground truth posterior predictive</li>
+</ul></li>
+<li>There shall be at least one ‘Evaluation Metric’ method. If only one, the metric must be the posterior predictive log likelihood of test data given posterior parameter samples (<code>evaluate_posterior_predictive()</code>). Method may only use numpy and scipy packages, cannot use PPLs
+<ul>
+<li>Inputs: posterior parameter samples, test data</li>
+<li>Outputs: deliverables of the evaluation metric (e.g., posterior predictive plots, performance plots, raw sample and chain data, distance from ground truth etc.)</li>
+</ul></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="ppl-implementation-module-specifications"></a><a href="#ppl-implementation-module-specifications" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>PPL Implementation module specifications:</h3>
+<ul>
+<li>Each PPL implementation module will contain a method <code>obtain_posterior()</code> . If PPL in not based on python, this implementation must have a python interface/wrapper to the PPL kernel. Multiple inference types are supported through the <code>--inference-type</code> option.Compilation and Sampling processes must be timed.
+<ul>
+<li>Inputs: model specification, training data, inference type</li>
+<li>Outputs: posterior samples of model parameters, compile time and avg. sampling time information</li>
+</ul></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="dataflow-specifications"></a><a href="#dataflow-specifications" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Dataflow specifications:</h3>
+<p>PPLBench uses the <code>args_dict</code> dictionary to pass various model and ppl-specific arguments. Here is the list of all the keys in this dictionary and thier brief descriptions:</p>
+<ul>
+<li><code>model</code>: the model for the current PPLBench run.</li>
+<li><code>k</code>: the covariate equivalent parameter of the model (e.g. k is number of covariates in the robust regression model, in noisy-or topic model it is the number of topics).</li>
+<li><code>n</code>: the number of datapoints to simulate</li>
+<li><code>ppls</code>: list of ppls that will be compared in the PPLBench run.</li>
+<li><code>inference_type</code>: type of inference (mcmc, vi).</li>
+<li><code>runtime</code>: Approximate time each ppl inference should run for.</li>
+<li><code>model_args</code>: a list of model-specific arguments; changes for each model. Refer to model descriptions for more details.</li>
+<li><code>rng_seed</code>: random seed for reproducability; default is 42.</li>
+<li><code>train_test_ratio</code>: ratio of train and test data; default is 0.5.</li>
+<li><code>iterations</code>: number of times to repeat inference; used to measure consistency across inference runs.</li>
+<li><code>save_samples</code>: option to save generated samples.</li>
+<li><code>save_generated_data</code> : option to save generated data.</li>
+<li><code>include_compile_time</code>: option to consider the compiliation time in the final plot.</li>
+<li><code>plot_data_size</code>: number of entries to save from the final plot data.</li>
+<li><code>num_samples_&lt;ppl&gt;</code>: number of samples to run inference for the specific ppl; this is determined automatically.</li>
+<li><code>thinning_&lt;ppl&gt;</code>: amount of thinning to be applied while storing samples; detemined automatically.</li>
+</ul>
+<p>Additionally, PPLBench uses the following dictionaries for storing and passing samples and timing info:</p>
+<ul>
+<li><code>posterior_samples = {‘PPLs’}</code>
+<ul>
+<li><code>PPL = {‘iterations’}</code>
+<ul>
+<li><code>iteration = {‘samples’}</code>
+<ul>
+<li><code>sample = {‘parameter’ : value}</code></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><code>posterior_predictives = {‘PPLs’}</code>
+<ul>
+<li><code>PPL = ndarray of shape [iterations, samples]</code></li>
+</ul></li>
+<li><code>timing_info = {‘PPLs’}</code>
+<ul>
+<li><code>PPL = {‘iterations’}</code>
+<ul>
+<li><code>iteration = {‘compile_time’, ‘inference_time’}</code></li>
+</ul></li>
+</ul></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="contributing-to-pplbench"></a><a href="#contributing-to-pplbench" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Contributing to PPLBench:</h3>
+<ul>
+<li>Adding Models : Contributors can add new model module with well defined model specifications and parameters.
+<ul>
+<li>It must have a <code>get_defaults()</code> method, which takes the argument dictionary (<code>args_dict</code>) and replaces any parameters that have value <code>‘default’</code> with the default values for that model.</li>
+<li>It must have a <code>generate_data()</code>method. Must accept model specs and params as well as generate train and test data in the format specified in dataflow specifications.</li>
+<li>The primary metric must be average posterior predictive log likelihood of test data given posterior parameter samples (<code>evaluate_posterior_predictive()</code>). Additional metrics shall be allowed if they follow data format specified in dataflow specifications.</li>
+<li>Naming Convention: capitalizeEachWordModel.py (name of Model; must end with 'Model.py')</li>
+<li>See example here</li>
+</ul></li>
+<li>Adding PPL implementation modules: Contributors can add new PPL implementation modules in the corresponding PPL folder:
+<ul>
+<li>It must contain an <code>obtain_posterior()</code> method.</li>
+<li>Naming Convention: capitalizeEachWord.py (name of model; should NOT be followed by suffix 'Model')</li>
+<li>See example here</li>
+</ul></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="prerequisites"></a><a href="#prerequisites" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Prerequisites:</h3>
+<p>Recommended setup:</p>
+<ul>
+<li>Linux(Tested on Ubuntu 16.04)</li>
+<li>Anaconda</li>
+</ul>
+<p>PPLBench:</p>
+<ul>
+<li>numpy</li>
+<li>scipy</li>
+<li>torch</li>
+<li>pandas</li>
+<li>matplotlib</li>
+<li>argparse</li>
+</ul>
+<p>PPL Implementations:
+Primary:</p>
+<ul>
+<li>pyjags: see README.md for installation procedure</li>
+<li>pystan: (<code>pip/conda install pystan</code>)</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li>pyro: (<code>pip/conda install pyro-ppl</code>) OR (install from <a href="https://github.com/pyro-ppl/pyro">source</a>)</li>
+<li>pymc3: (<code>pip/conda install pymc3</code>)</li>
+<li>any other PPLs supported in future</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="user-interface"></a><a href="#user-interface" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>User interface:</h3>
+<p>Arguments shall be passed through initial inputs as arguments to python script. These will have a ‘default’ option, which when passed to the models will let the model assign model-specific default values:</p>
+<ul>
+<li><code>-m model</code></li>
+<li><code>-t time to run inference per PPL</code></li>
+<li><code>-n size of data to be simulated</code></li>
+<li><code>-k number of covariates</code></li>
+<li><code>-l ppls</code></li>
+<li><code>--train-test-ratio</code></li>
+<li><code>--inference-type</code></li>
+<li><code>--iterations</code></li>
+<li><code>--rng-seed</code></li>
+<li><code>--model-args model-specific arguments</code></li>
+<li><code>--plot-data-size</code></li>
+</ul>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/introduction"><span class="arrow-prev">← </span><span>Introduction</span></a><a class="docs-next button" href="/docs/getting_started"><span>Getting Started</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#abstract">Abstract</a></li><li><a href="#system-specification">System Specification</a><ul class="toc-headings"><li><a href="#project-directory-layout">Project directory Layout:</a></li><li><a href="#overview">Overview:</a></li><li><a href="#model-module-specifications">Model Module Specifications:</a></li><li><a href="#ppl-implementation-module-specifications">PPL Implementation module specifications:</a></li><li><a href="#dataflow-specifications">Dataflow specifications:</a></li><li><a href="#contributing-to-pplbench">Contributing to PPLBench:</a></li><li><a href="#prerequisites">Prerequisites:</a></li><li><a href="#user-interface">User interface:</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/" class="nav-home"><img src="/img/favicon.png" alt="PPLBench" width="66" height="58"/></a><div class="footerSection"><h5>Docs</h5><a href="/docs/introduction">Introduction</a><a href="/docs/getting_started">Getting Started</a><a href="/tutorials/">Tutorials</a><a href="/api/">API Reference</a></div><div class="footerSection"><h5>Legal</h5><a href="https://opensource.facebook.com/legal/privacy/" target="_blank" rel="noreferrer noopener">Privacy</a><a href="https://opensource.facebook.com/legal/terms/" target="_blank" rel="noreferrer noopener">Terms</a></div><div class="footerSection"><h5>Social</h5><div class="social"><a class="github-button" href="https://github.com/facebookresearch/pplbench" data-count-href="https://github.com/facebookresearch/pplbench/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star PPLBench on GitHub">pplbench</a></div></div></section><a href="https://opensource.facebook.com/" target="_blank" rel="noreferrer noopener" class="fbOpenSource"><img src="/img/oss_logo.png" alt="Facebook Open Source" width="170" height="45"/></a><section class="copyright"> Copyright © 2020 Facebook Inc.</section>}</footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: '',
+                indexName: 'pplbench',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>
