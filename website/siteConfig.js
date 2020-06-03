@@ -33,7 +33,7 @@ const siteConfig = {
   organizationName: 'facebookresearch',
 
   // Google analytics
-  // gaTrackingId: '',
+  gaTrackingId: 'UA-44373548-47',
 
   // links that will be used in the header navigation bar
   headerLinks: [
@@ -43,7 +43,7 @@ const siteConfig = {
   ],
 
   headerLinks: [
-    { doc: 'introduction', label: 'Docs' }, 
+    { doc: 'introduction', label: 'Docs' },
     { href: 'https://github.com/facebookresearch/pplbench', label: 'GitHub' },
   ],
 
