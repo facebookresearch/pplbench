@@ -105,7 +105,7 @@ def generate_plot(posterior_predictive, args_dict):
         legend.append(line)
     legend = sorted(legend, key=lambda line: line.get_label())
     plt.legend(handles=legend)
-    ax = plt.axes()
+    ax = plt.gca()
     ax.set_xlabel("Samples")
     ax.set_ylabel("Average log predictive")
     ax.yaxis.set_major_formatter(mticker.FormatStrFormatter("%.1e"))
@@ -220,6 +220,7 @@ def get_args(models_list, ppls_list):
         "-s",
         "--num-samples",
         default=100,
+        type=int,
         help="number of samples to sample from the posterior in \
         each trial of the inference algorithm",
     )
