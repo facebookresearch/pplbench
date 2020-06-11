@@ -1,9 +1,0 @@
-{
-  "docs": {
-    "About": ["introduction", "specifications"],
-    "General": ["getting_started"],
-    "Basic Concepts": [
-      "overview"
-    ]
-  }
-}
