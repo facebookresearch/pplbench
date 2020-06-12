@@ -1,7 +1,4 @@
----
-id: specifications
-title: PPLBench System Specification
----
+# PPLBench System Specification
 
 ## Abstract
 
@@ -27,7 +24,7 @@ The typical PPLBench flow will be as follows:
 ### Overview:
 
 PPLBench will be implemented in python3. Each Model in PPLBench will have a module in ‘models/’ directory. The PPL implementations of each model will be organized in the ‘ppls/’ directory.  The ‘PPLBench’ code will consist of initializing the relevant model class based on CLI user inputs and displaying/storing output files.
-[Image: assets/system_overview.png]
+[Image: system_overview.png]
 ### Model Module Specifications:
 
 * Every Model should consist of module description on top. This should contain the name of the model, methods contained in the module, Model specification, and the order in which to pass model-specific arguments
