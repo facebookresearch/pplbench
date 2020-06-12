@@ -73,8 +73,8 @@ def generate_data(args_dict, model=None):
     beta_locs = (args_dict["model_args"])[2] * np.ones(K).reshape([-1, 1])
     x_scale = (args_dict["model_args"])[3]
 
-    alpha = stats.norm.rvs(loc=0, scale=alpha_scale, size=N)
-    beta = stats.norm.rvs(loc=beta_locs, scale=beta_scale, size=(K, N))
+    alpha = stats.norm.rvs(loc=0, scale=alpha_scale, size=1)
+    beta = stats.norm.rvs(loc=beta_locs, scale=beta_scale, size=(K, 1))
 
     x_scales = np.random.normal(0, x_scale, size=K).reshape([-1, 1])
     x_scales = np.exp(x_scales)

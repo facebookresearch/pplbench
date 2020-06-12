@@ -72,8 +72,8 @@ def generate_data(args_dict, model=None):
     alpha_scale, beta_scale, beta_loc, sigma_mean = args_dict["model_args"]
 
     # sample parameters
-    alpha = stats.norm.rvs(loc=0, scale=alpha_scale, size=N)
-    beta = stats.norm.rvs(loc=beta_loc, scale=beta_scale, size=(K, N))
+    alpha = stats.norm.rvs(loc=0, scale=alpha_scale, size=1)
+    beta = stats.norm.rvs(loc=beta_loc, scale=beta_scale, size=(K, 1))
     nu = np.random.gamma(shape=2, scale=10)
     sigma = stats.expon.rvs(loc=0, scale=sigma_mean)
 
