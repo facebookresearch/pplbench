@@ -369,9 +369,7 @@ def main():
                     args_dict[key] = defaults[key]
                 else:
                     print(
-                        "ModelError: no default found for",
-                        key,
-                        "in noisy_or_topic_model",
+                        f"ModelError: no default found for {key} in {args.model}_model"
                     )
                     exit(1)
     else:
