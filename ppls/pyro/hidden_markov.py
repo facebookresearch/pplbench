@@ -3,9 +3,7 @@
 import time
 from typing import Dict, List, Tuple
 
-# pyre-fixme[21]: Could not find `pyro`.
-# pyre-fixme[21]: Could not find `pyro`.
-import pyro
+import pyro  # pyre-ignore
 import pyro.distributions as dist
 import torch
 import torch.tensor as tensor

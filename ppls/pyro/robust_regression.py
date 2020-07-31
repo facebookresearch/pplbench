@@ -3,10 +3,7 @@
 import time
 
 import numpy as np
-
-# pyre-fixme[21]: Could not find `pyro`.
-# pyre-fixme[21]: Could not find `pyro`.
-import pyro
+import pyro  # pyre-ignore
 import pyro.distributions as dist
 import torch
 import torch.nn as nn

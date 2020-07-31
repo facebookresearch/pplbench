@@ -2,15 +2,10 @@
 
 import time
 
-# pyre-fixme[21]: Could not find `jax`.
-# pyre-fixme[21]: Could not find `jax`.
-import jax.numpy as np
+import jax.numpy as np  # pyre-ignore
 import numpy as onp
 from jax import random
-
-# pyre-fixme[21]: Could not find `numpyro`.
-# pyre-fixme[21]: Could not find `numpyro`.
-from numpyro.distributions import Bernoulli, Normal
+from numpyro.distributions import Bernoulli, Normal  # pyre-ignore
 from numpyro.mcmc import MCMC, NUTS
 from numpyro.primitives import sample
 

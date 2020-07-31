@@ -3,14 +3,8 @@
 import time
 
 import numpy as np
-
-# pyre-fixme[21]: Could not find `pymc3`.
-# pyre-fixme[21]: Could not find `pymc3`.
-import pymc3 as pm
-
-# pyre-fixme[21]: Could not find `theano`.
-# pyre-fixme[21]: Could not find `theano`.
-import theano.tensor as t
+import pymc3 as pm  # pyre-ignore
+import theano.tensor as t  # pyre-ignore
 
 from ..pplbench_ppl import PPLBenchPPL
 

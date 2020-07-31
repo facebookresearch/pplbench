@@ -4,10 +4,7 @@ import os
 import time
 
 import matplotlib.pyplot as plt
-
-# pyre-fixme[21]: Could not find `pyro`.
-# pyre-fixme[21]: Could not find `pyro`.
-import pyro
+import pyro  # pyre-ignore
 import pyro.contrib.autoguide as autoguide
 import pyro.distributions as dist
 import pyro.infer

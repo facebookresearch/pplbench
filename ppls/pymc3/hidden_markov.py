@@ -3,10 +3,7 @@
 import time
 
 import numpy as np
-
-# pyre-fixme[21]: Could not find `pymc3`.
-# pyre-fixme[21]: Could not find `pymc3`.
-import pymc3 as pm
+import pymc3 as pm  # pyre-ignore
 import torch
 from numpy import array
 

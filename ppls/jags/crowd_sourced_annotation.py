@@ -3,10 +3,7 @@
 import time
 
 import numpy as np
-
-# pyre-fixme[21]: Could not find `pyjags`.
-# pyre-fixme[21]: Could not find `pyjags`.
-import pyjags
+import pyjags  # pyre-ignore
 
 from ..pplbench_ppl import PPLBenchPPL
 
