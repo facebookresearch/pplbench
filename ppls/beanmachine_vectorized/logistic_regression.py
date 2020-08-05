@@ -91,7 +91,7 @@ class LogisticRegression(PPLBenchPPL):
         alpha_scale = float((args_dict["model_args"])[0])
         beta_scale = [float((args_dict["model_args"])[1])] * K
         beta_loc = float((args_dict["model_args"])[2])
-        num_samples = args_dict["num_samples_beanmachine-vectorized"]
+        num_samples = args_dict["num_samples_beanmachine_vectorized"]
         inference_type = args_dict["inference_type"]
 
         start_time = time.time()

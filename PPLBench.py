@@ -46,7 +46,7 @@ def get_color_for_ppl(ppl):
         "bmgraph",
         "stan",
         "beanmachine",
-        "beanmachine-vectorized",
+        "beanmachine_vectorized",
         "jags",
         "bootstrapping",
         "pymc3",

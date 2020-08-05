@@ -17,13 +17,21 @@ class NSchoolsVectorizedModel:
     def __init__(
         self,
         df,
-        num_samples,
-        num_districts,
-        num_states,
-        num_types,
-        sd_district_scale=1,
-        sd_state_scale=1,
-        sd_type_scale=1,
+        num_samples: int,
+        num_districts: int,
+        num_states: int,
+        num_types: int,
+        sd_district_scale: float = 1,
+        sd_state_scale: float = 1,
+        sd_type_scale: float = 1,
+        num_worlds: int = 100,
+        batch_size: int = 16,
+        node_id_embedding_dim: int = 0,
+        node_embedding_dim: int = 32,
+        obs_embedding_dim: int = 4,
+        mb_embedding_dim: int = 32,
+        mb_num_layers: int = 3,
+        node_proposal_num_layers: int = 1,
     ):
         self._df = df
         self._num_samples = num_samples
@@ -62,7 +70,17 @@ class NSchoolsVectorizedModel:
         }
 
         self._icmh = ICInference()
-        self._icmh.compile(list(self.observations.keys()))
+        self._icmh.compile(
+            observation_keys=list(self.observations.keys()),
+            num_worlds=num_worlds,
+            batch_size=batch_size,
+            node_id_embedding_dim=node_id_embedding_dim,
+            node_embedding_dim=node_embedding_dim,
+            obs_embedding_dim=obs_embedding_dim,
+            mb_embedding_dim=mb_embedding_dim,
+            mb_num_layers=mb_num_layers,
+            node_proposal_num_layers=node_proposal_num_layers,
+        )
 
     @bm.random_variable
     def beta_0(self):
@@ -92,7 +110,7 @@ class NSchoolsVectorizedModel:
     def infer(self):
         return self._icmh.infer(
             self.queries, self.observations, num_samples=self._num_samples, num_chains=1
-        ).get_chain()
+        )
 
 
 class NSchoolsVectorized(PPLBenchPPL):
@@ -105,7 +123,7 @@ class NSchoolsVectorized(PPLBenchPPL):
         :returns: samples_beanmachine(dict): posterior samples of all parameters
         :returns: timing_info(dict): compile_time, inference_time
         """
-        num_samples = args_dict["num_samples_beanmachine"]
+        num_samples = args_dict["num_samples_beanmachine_vectorized"]
         num_states, num_districts, num_types = [int(x) for x in args_dict["model_args"]]
 
         compile_start = time.time()
@@ -119,7 +137,7 @@ class NSchoolsVectorized(PPLBenchPPL):
         elapsed_time_compile_beanmachine = time.time() - compile_start
 
         inference_start = time.time()
-        samples = model.infer()
+        samples = model.infer().get_chain()
         elapsed_time_inference_beanmachine = time.time() - inference_start
 
         timing_info = {
@@ -133,9 +151,9 @@ class NSchoolsVectorized(PPLBenchPPL):
             samples_formatted[f"sd_{level}"] = samples.get_variable(model.sds(i))
 
             u_i = samples.get_variable(model.u(i))
+            print(u_i.shape)
             for j in range(model._u_sizes[i]):
-                if i == 0:
-                    # beta_district
+                if level == "district":
                     state = int(j / num_districts)
                     district = j % num_districts
                     samples_formatted[f"beta_state_{state}_district_{district}"] = u_i[

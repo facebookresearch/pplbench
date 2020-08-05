@@ -102,7 +102,7 @@ class RobustRegression(PPLBenchPPL):
 
         alpha_scale, beta_scale, beta_loc, sigma_mean = args_dict["model_args"]
         beta_scale = [beta_scale] * K
-        num_samples = args_dict["num_samples_beanmachine-vectorized"]
+        num_samples = args_dict["num_samples_beanmachine_vectorized"]
         inference_type = args_dict["inference_type"]
 
         start_time = time.time()
