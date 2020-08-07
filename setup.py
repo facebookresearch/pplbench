@@ -68,11 +68,12 @@ setup(
     long_description_content_type="text/markdown",
     python_requires=">=3.6",
     install_requires=[
+        "BeanMachine>=0.0.1a1",
         "torch>=1.4.0",
         "numpy>=1.16.2",
         "pandas>=0.24.2",
         "matplotlib>=3.0.3",
-        "scipy>=1.2.1",
+        "scipy>=0.16",
         "pandas>=0.24.2",
         "scikit-learn>=0.23.1",
     ],
