@@ -1,2 +1,7 @@
+*.swp
+
 # Don't track content of these folders
+.vscode/
+*.egg-info/
 outputs/
+**/__pycache__/
