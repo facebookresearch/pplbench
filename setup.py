@@ -11,11 +11,7 @@ REQUIRED_MAJOR = 3
 REQUIRED_MINOR = 6
 
 
-DEV_REQUIRES = [
-    "black==19.3b0",
-    "isort",
-    "flake8",
-]
+DEV_REQUIRES = ["black==19.3b0", "isort", "flake8"]
 
 # Check for python version
 if sys.version_info < (REQUIRED_MAJOR, REQUIRED_MINOR):
@@ -48,7 +44,7 @@ setup(
     description="Evaluation framework for probabilistic programming languages",
     author="Facebook, Inc.",
     license="MIT",
-    project_urls={"Source": "https://github.com/facebookresearch/pplbench",},
+    project_urls={"Source": "https://github.com/facebookresearch/pplbench"},
     keywords=[
         "Probabilistic Programming Language",
         "Bayesian Inference",
