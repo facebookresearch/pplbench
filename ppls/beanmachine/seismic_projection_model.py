@@ -1,11 +1,12 @@
 # Copyright(C) Facebook, Inc. and its affiliates. All Rights Reserved.
 
 import beanmachine.ppl as bm
-import benchmarks.pplbench.models.seismic_location_util as seismic
 import torch
 import torch.distributions as dist
 import torch.tensor as tensor
 from torch import Tensor
+
+from ...models import seismic_location_util as seismic
 
 
 class SeismicProjectionModel(object):

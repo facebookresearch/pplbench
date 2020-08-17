@@ -2,7 +2,6 @@
 
 from typing import Dict, Tuple
 
-import benchmarks.pplbench.models.seismic_location_util as seismic
 import numpy as np
 import torch
 import torch.distributions as dist
@@ -19,6 +18,8 @@ from benchmarks.pplbench.ppls.beanmachine.seismic_projection_model import (
     SeismicProjectionModel,
 )
 from torch import Tensor
+
+from ...models import seismic_location_util as seismic
 
 
 class SingleSiteSeismicProposer(SingleSiteAncestralProposer):

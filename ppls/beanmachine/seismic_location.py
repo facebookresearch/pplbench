@@ -5,13 +5,10 @@ from typing import Dict, List, Tuple
 
 import beanmachine.ppl as bm
 import torch.tensor as tensor
-from benchmarks.pplbench.ppls.beanmachine.seismic_projection_model import (
-    SeismicProjectionModel,
-)
-from benchmarks.pplbench.ppls.beanmachine.seismic_proposer import (
-    SingleSiteSeismicProposer,
-)
 from ppls.pplbench_ppl import PPLBenchPPL
+
+from .seismic_projection_model import SeismicProjectionModel
+from .seismic_proposer import SingleSiteSeismicProposer
 
 
 class SeismicLocation(PPLBenchPPL):

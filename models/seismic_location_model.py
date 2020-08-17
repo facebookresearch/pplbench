@@ -46,12 +46,13 @@ Model specific arguments:
 return dictionary with mu and theta
 """
 
-import benchmarks.pplbench.models.seismic_location_util as seismic
 import numpy as np
 import torch
 import torch.distributions as dist
 import torch.tensor as tensor
 from tqdm import tqdm
+
+from . import seismic_location_util as seismic
 
 
 def get_defaults():
