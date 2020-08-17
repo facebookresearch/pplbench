@@ -64,7 +64,6 @@ setup(
     long_description_content_type="text/markdown",
     python_requires=">=3.6",
     install_requires=[
-        "BeanMachine>=0.0.1a1",
         "torch>=1.4.0",
         "numpy>=1.16.2",
         "pandas>=0.24.2",

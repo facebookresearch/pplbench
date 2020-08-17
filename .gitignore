@@ -1,4 +1,5 @@
 *.swp
+beanmachine.log
 
 # Don't track content of these folders
 .vscode/
