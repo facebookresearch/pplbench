@@ -46,7 +46,7 @@ Following is the procedure to install PPLBench on Linux (Tested on Ubuntu 18.04)
         5. numpyro:
             1. `python3 -m pip install --upgrade pip`
             2. `pip install https://files.pythonhosted.org/packages/24/bf/e181454464b866f30f09b5d74d1dd08e8b15e032716d8bcc531c659776ab/jaxlib-0.1.37-cp36-none-manylinux2010_x86_64.whl`
-            3. `pip install numpyro==0.2.0`
+            3. `pip install numpyro==0.3.0`
 
 ### Example:
 

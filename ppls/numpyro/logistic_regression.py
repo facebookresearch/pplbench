@@ -6,7 +6,7 @@ import jax.numpy as np  # pyre-ignore
 import numpy as onp
 from jax import random
 from numpyro.distributions import Bernoulli, Normal  # pyre-ignore
-from numpyro.mcmc import MCMC, NUTS
+from numpyro.infer import MCMC, NUTS
 from numpyro.primitives import sample
 
 from ..pplbench_ppl import PPLBenchPPL
@@ -48,6 +48,14 @@ class LogisticRegression(PPLBenchPPL):
         # Run inference to generate samples from the posterior
         kernel = NUTS(model=logistic_regression)
         mcmc = MCMC(kernel, num_warmup=num_warmup, num_samples=num_samples)
+        mcmc.warmup(
+            random.PRNGKey(1),
+            x=x_train,
+            y=y_train,
+            model_args=model_args,
+            collect_warmup=True,
+        )
+        warm_up_samples = mcmc.get_samples()
         mcmc.run(random.PRNGKey(1), x=x_train, y=y_train, model_args=model_args)
         samples_numpyro = mcmc.get_samples()
         elapsed_time_sample_pyro = time.time() - start_time
@@ -55,6 +63,11 @@ class LogisticRegression(PPLBenchPPL):
         # repackage samples into shape required by PPLBench
         samples = []
 
+        for i in range(num_warmup):
+            sample_dict = {}
+            sample_dict["alpha"] = onp.asarray(warm_up_samples["alpha"][i])
+            sample_dict["beta"] = onp.asarray(warm_up_samples["beta"][i])
+            samples.append(sample_dict)
         for i in range(num_samples):
             sample_dict = {}
             sample_dict["alpha"] = onp.asarray(samples_numpyro["alpha"][i])
