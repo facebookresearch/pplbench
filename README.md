@@ -1,28 +1,35 @@
-# Getting Started with PPLBench
+# Getting Started with PPL Bench
 
-## What is PPLBench?
+## What is PPL Bench?
 
-PPLBench is a benchmarking framework for evaluating the performance of various PPLs on statistical models. It is designed to be modular so new models and PPL implementations of models can be added into this framework. The fundamental evaluation metric is the log predictive likelihood on a held out test dataset. We believe that log predictive likelihood is the common denominator across which PPL accuracy & convergence can be measured.
+PPL Bench is a new benchmark framework for evaluating the performance of probabilistic programming languages (PPLs).
 
 ## Purpose of PPL Bench
 
 The purpose of PPL Bench as a probabilistic programming benchmark is two-fold.
 
-First, we want researchers as well as conference reviewers to be able to evaluate improvements in PPLs in a standardized setting. In essence, we’d like to create a similar standard to one like ImageNet, but for PPL inference measurement.
-
-Second, we want end users to be able to pick the PPL that is most suited for their modeling application.
+1) To provide researchers with a framework to evaluate improvements in PPLs in a standardized setting.
+2) To enable users to pick the PPL that is most suited for their modeling application.
 
 Typically, comparing different ML systems requires duplicating huge segments of work: generating data, running analysis, determining predictive performance, and comparing across implementations. PPL Bench automates nearly all of this workflow.
 
+## Running
 
-## License
+From the PPLBench directory, run the following command:
 
-This source code is licensed under the MIT license found in the
-LICENSE file in the root directory of this source tree.
+```python PPLBench.py -m [model] -l [ppls]  -k [covariates] -n [observations] -s [samples] --trials [trials]```
 
-## How to use PPLBench?
+An example command would be:
 
-### Installation:
+```python PPLBench.py -m logisic_regression -l stan,pymc3 -k 10 -n 20000 -s 1000 --trials 2```
+
+To see supported models, PPL implementations and command line arguments, type:
+
+`python PPLBench.py -h`
+
+To get started, there are reference models and PPL implementations. Please submit pull requests to modify an existing PPL implementation or to add a new PPL or model.
+
+### Installing:
 
 Following is the procedure to install PPLBench on Linux (Tested on Ubuntu 18.04):
 
@@ -48,27 +55,30 @@ Following is the procedure to install PPLBench on Linux (Tested on Ubuntu 18.04)
             2. `pip install https://files.pythonhosted.org/packages/24/bf/e181454464b866f30f09b5d74d1dd08e8b15e032716d8bcc531c659776ab/jaxlib-0.1.37-cp36-none-manylinux2010_x86_64.whl`
             3. `pip install numpyro==0.3.0`
 
-### Example:
+## How PPL Bench works
 
-Let us go through an example to check if the installation is working. From the PPLBench directory, run the following command:
+1) Generate Data
 
-```
-python PPLBench.py -m robust_regression -l jags,stan -k 5 -n 2000 -s 500 --trials 2
-```
+The first step is to simulate data (train and test) given the generative model and model parameters. To do this, one can use Numpy or any other Python library that can be used to draws samples from probability distributions. Once this is defined, when benchmarking this model, PPL Bench will use the data generated from this function across all PPLs.
 
-To see supported models, PPL implementations and command line arguments, type:
+2) Implement Model in a PPL
 
-`python PPLBench.py -h`
+Once we have simulated data for a given model, PPL Bench will go through the PPLs which have implemented the model in question. For every PPL that you want to benchmark against, you will need a corresponding model implementation in that PPL.
 
-To get started, there are reference models and PPL implementations. Please submit pull requests to modify an existing PPL implementation or to add a new PPL or model.
+3) Evaluate Different PPLs
 
-### Adding a new PPL:
+PPLBench automatically generates predictive log likelihood plots on the same test dataset across all PPLs.
 
-Given the modularity of the framework, to add a new PPL implementation to PPLBench, you need to implement one function — `obtain_posterior`.
+We support multiple trials, which runs inference on the same training data, multiple times. Our plots use multiple trials to generate confidence bands in our predictive log likelihood plots.
 
+We also show other important statistics such as effective sample size, inference time, and r_hat.
+
+### How to add a new PPL?
+
+All PPL implementations must inherit from `PPLBenchPPL` and implement the `obtain_posterior` method.
 At a high level, this function should return samples from the posterior after inference is completed.
 
-### Adding a new Model:
+### How to add a new model?
 
 To add a new model, you need to implement two methods — `generate_data` and `evaluate_posterior_predictive`.
 
@@ -76,9 +86,16 @@ To add a new model, you need to implement two methods — `generate_data` and `e
 
 `evaluate_posterior_predictive` should return the predictive log likelihood of the data given samples from the inferred parameters.
 
-### Next steps:
+## Join the PPL Bench community
 
  For more information about PPLBench, refer to
 
 1. Blog post: [LINK TO BLOG POST]
 2. Paper: [LINK TO PAPER]
+
+See the CONTRIBUTING.md file for how to help out.
+
+## License
+
+This source code is licensed under the MIT license found in the
+LICENSE file in the root directory of this source tree.
