@@ -190,7 +190,7 @@ class NSchools(PPLBenchPPL):
         elapsed_time_compile_stan = time.time() - start_time
 
         if args_dict["inference_type"] == "vi":
-            raise Exception(f"VI is not supported for the N_schools model.")
+            raise Exception("VI is not supported for the N_schools model.")
 
         elif args_dict["inference_type"] == "mcmc":
             # sample the parameter posteriors, time it

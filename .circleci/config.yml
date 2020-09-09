@@ -1,0 +1,75 @@
+version: 2.1
+
+commands:
+
+  upgrade_pip:
+    steps:
+      - run:
+          name: "Upgrade pip"
+          command: sudo pip install --progress-bar off --upgrade pip
+
+  pip_install_linters:
+    steps:
+      - run:
+          name: "Install lint packages"
+          command: >
+            sudo pip install --progress-bar off black==19.3b0 isort==4.3.21
+            flake8==3.8.1
+
+  pip_install_core_deps:
+    steps:
+      - run:
+          name: "Install PPLBench core dependencies"
+          command: sudo pip install --progress-bar off -r requirements.txt
+
+  lint_flake8:
+    steps:
+      - run:
+          name: "Lint with flake8"
+          command: flake8 .
+
+  lint_isort:
+    steps:
+      - run:
+          name: "Lint with isort"
+          command: >
+            isort --check-only --diff --line-width=88 --multi-line=3
+            --trailing-comma --force-grid-wrap=0 --section-default=THIRDPARTY
+            --lines-after-imports=2 --combine-as
+
+  lint_black:
+    steps:
+      - run:
+          name: "Lint with black"
+          command: black --check --diff --line-length=88 .
+
+
+jobs:
+
+  lint_py37_pip:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - checkout
+      - upgrade_pip
+      - pip_install_linters
+      - lint_flake8
+      - lint_isort
+      - lint_black
+
+
+aliases:
+
+  - &exclude_ghpages_fbconfig
+    branches:
+      ignore:
+        - gh-pages
+        - fb-config
+
+
+workflows:
+
+  lint:
+    jobs:
+      - lint_py37_pip:
+          filters: *exclude_ghpages_fbconfig
