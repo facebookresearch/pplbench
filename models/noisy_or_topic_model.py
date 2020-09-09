@@ -109,14 +109,14 @@ def generate_data(args_dict, model):
     sample[:, 0] = 1  # leaky node is always on
     # sample the topic nodes first
     for node in range(1, T):
-        p_node = 1 - np.exp(-np.sum(graph[:, node] * sample[0]))
+        p_node = 1 - np.exp(-(np.sum(graph[:, node] * sample[0])))
         # sample with this probability, boadcast to all N
         sample[:, node] = np.random.binomial(1, p_node)
     # sample the words with fixed topic nodes
     for node in range(T, K):
         # 'sample' acts as mask while graph[:, node] are the weights
         # N * K -> [N,K]; sum over axis 1 -> N
-        p_node = 1 - np.exp(-np.sum(graph[:, node] * sample, axis=1))
+        p_node = 1 - np.exp(-(np.sum(graph[:, node] * sample, axis=1)))
         sample[:, node] = np.random.binomial(1, p_node, size=N)
     # Split in topic/sentence
     topics, words = sample[:, :T], sample[:, T:]
@@ -150,7 +150,7 @@ def evaluate_posterior_predictive(samples, data_test, model):
         log_lik_test = 0
         for node in range(T, K):
             p_node = 1 - np.exp(
-                -np.sum(graph[:T, node] * np.array(sample["node"], dtype=float))
+                -(np.sum(graph[:T, node] * np.array(sample["node"], dtype=float)))
             )
             log_lik_test += stats.binom.logpmf(k=words[node - T], n=1, p=p_node)
         pred_log_lik_array.append(log_lik_test)
