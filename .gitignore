@@ -1,3 +1,7 @@
+# we don't want to push changes to example.json by default
+./example.json
+# ignore compilation artifacts
+*.pyc
 *.swp
 beanmachine.log
 

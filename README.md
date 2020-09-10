@@ -31,18 +31,19 @@ To get started, there are reference models and PPL implementations. Please submi
 
 ### Installing:
 
-Following is the procedure to install PPLBench on Linux (Tested on Ubuntu 18.04):
+Following is the procedure to install PPLBench :
 
 1. Download/Clone PPLBench:
     `git clone https://github.com/facebookresearch/pplbench.git`
 
 2. Installing dependencies:
-    1. PPLBench core:
+    1. Enter a virtual (or conda) environment
+    2. PPLBench core:
         `pip install -r requirements.txt`
-    2. PPLs (Only need to install the ones which you want to benchmark):
+    3. PPLs (Only need to install the ones which you want to benchmark):
         1. Stan
             1. `pip install pystan`
-        2. Jags
+        2. Jags (Tested on Ubuntu 18.04)
             1. `sudo apt-get install jags`
             2. `sudo apt install pkg-config`
             3. `pip install pyjags`
@@ -72,6 +73,25 @@ PPLBench automatically generates predictive log likelihood plots on the same tes
 We support multiple trials, which runs inference on the same training data, multiple times. Our plots use multiple trials to generate confidence bands in our predictive log likelihood plots.
 
 We also show other important statistics such as effective sample size, inference time, and r_hat.
+
+Let's dive right in with a benchmark run of Bayesian Logistic Regression. Please
+install stan (see above) and then run the following command:
+
+```
+python -m pplbench.main example.json
+```
+
+This will create a benchmark run with two trials of Stan on the Bayesian Logistic Regression model. The results of the run are saved in the `outputs/` directory. Please see the `example.json` file to understand the schema for specifying benchmark runs.
+
+The schema is documented in `pplbench/main.py` and can be printed by running the help command:
+
+```
+python -m pplbench.main -h
+```
+
+A number of models is available in the `models` directory and the PPL implementations are available in the `ppls` directory.
+
+Please feel free to submit pull requests to modify an existing PPL implementation or to add a new PPL or model.
 
 ### How to add a new PPL?
 
