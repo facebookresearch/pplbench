@@ -22,6 +22,14 @@ commands:
           name: "Install PPLBench core dependencies"
           command: sudo pip install --progress-bar off -r requirements.txt
 
+  pip_install_ppls:
+    steps:
+      - run:
+          name: "Install PPLs"
+          command: |
+            sudo apt-get install jags
+            sudo pip install --progress-bar off pystan pyjags pymc3 pyro-ppl numpyro
+
   lint_flake8:
     steps:
       - run:
@@ -49,6 +57,16 @@ commands:
           name: "Lint with mypy"
           command: mypy -p pplbench
 
+  run_example_json:
+    steps:
+      - run:
+          name: "Run JSON files under examples directory"
+          no_output_timeout: 30m
+          command: >
+            circleci tests glob "examples/*.json" |
+            circleci tests split |
+            xargs -n 1 -t python -um pplbench.main
+
 
 jobs:
 
@@ -65,6 +83,16 @@ jobs:
       - pip_install_core_deps
       - lint_mypy
 
+  test_example_json_py37_pip:
+    docker:
+      - image: circleci/python:3.7
+    parallelism: 2
+    steps:
+      - checkout
+      - upgrade_pip
+      - pip_install_core_deps
+      - pip_install_ppls
+      - run_example_json
 
 aliases:
 
@@ -80,4 +108,6 @@ workflows:
   lint:
     jobs:
       - lint_py37_pip:
+          filters: *exclude_ghpages_fbconfig
+      - test_example_json_py37_pip:
           filters: *exclude_ghpages_fbconfig
