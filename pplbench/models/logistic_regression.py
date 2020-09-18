@@ -6,7 +6,7 @@ import numpy as np
 import xarray as xr
 
 from .base_model import BaseModel
-from .utils import log1pexp
+from .utils import log1pexp, split_train_test
 
 
 LOGGER = logging.getLogger(__name__)
@@ -87,18 +87,14 @@ class LogisticRegression(BaseModel):
             {"X": (["item", "feature"], x), "Y": (["item"], y)},
             coords={"item": np.arange(n), "feature": np.arange(k)},
             attrs={
+                "n": n,
                 "k": k,
                 "alpha_scale": alpha_scale,
                 "beta_scale": beta_scale,
                 "beta_loc": beta_loc,
             },
         )
-        num_train = int(train_frac * n)
-        train = data.isel(item=slice(None, num_train))
-        test = data.isel(item=slice(num_train, None))
-        train.attrs["n"] = num_train
-        test.attrs["n"] = n - num_train
-        return train, test
+        return split_train_test(data, "item", train_frac)
 
     @staticmethod
     def evaluate_posterior_predictive(
@@ -109,16 +105,16 @@ class LogisticRegression(BaseModel):
         See the class documentation for the `samples` and `test` parameters.
         :returns: a numpy array of the same size as the sample dimension.
         """
-        # transpose the datasets to be in a convenience format
+        # transpose the datasets to be in a convenient format
         samples = samples.transpose("draw", "feature")
         test = test.transpose("feature", "item")
         alpha = samples.alpha.values.reshape(-1, 1)  # size = (num_samples, 1)
         beta = samples.beta.values  # size = (num_samples, k)
-        x = test.X.values  # size = (k, n)
-        y = test.Y.values.reshape(1, -1)  # size = (1, n)
-        mu = alpha + beta @ x  # size = (num_samples, n)
+        x = test.X.values  # size = (k, n_test)
+        y = test.Y.values.reshape(1, -1)  # size = (1, n_test)
+        mu = alpha + beta @ x  # size = (num_samples, n_test)
         # for y=1 the log_prob is -log(1 + exp(-mu))
         # and for y=0 the log_prob is -log(1 + exp(mu))
-        sign_y = np.where(y, -1, 1)  # size = (1, n)
-        logprob = -log1pexp(sign_y * mu)  # size = (num_samples, n)
-        return logprob.sum(axis=1)  # size = (num_samples,)
+        sign_y = np.where(y, -1, 1)  # size = (1, n_test)
+        loglike = -log1pexp(sign_y * mu)  # size = (num_samples, n_test)
+        return loglike.sum(axis=1)  # size = (num_samples,)

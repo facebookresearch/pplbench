@@ -1,5 +1,8 @@
 # Copyright(C) Facebook, Inc. and its affiliates. All Rights Reserved.
+from typing import Tuple
+
 import numpy as np
+import xarray as xr
 
 
 def log1pexp(x: np.ndarray) -> np.ndarray:
@@ -13,3 +16,20 @@ def log1pexp(x: np.ndarray) -> np.ndarray:
     y[x < 18] = np.log1p(np.exp(x[x < 18]))
     y[x >= 18] = x[x >= 18] + np.exp(-x[x >= 18])
     return y
+
+
+def split_train_test(
+    data: xr.Dataset, coord_name: str, train_frac: float
+) -> Tuple[xr.Dataset, xr.Dataset]:
+    """
+    Splice a dataset into two along the given coordinate
+
+    :param data: A dataset object which is to be split
+    :param coord_name: The coordinate on which the data is going to be sliced
+    :param train_frac: Fraction of data to be given to training
+    :returns: The training and test datasets.
+    """
+    num_train = int(train_frac * len(data.coords[coord_name]))
+    train = data[{coord_name: slice(None, num_train)}]
+    test = data[{coord_name: slice(num_train, None)}]
+    return train, test
