@@ -55,7 +55,7 @@ def create_output_dir(config: SimpleNamespace) -> str:
     if not os.path.isdir(root_dir):
         os.mkdir(os.path.join(".", "outputs"))
     timestamp = datetime.datetime.fromtimestamp(time.time()).strftime(
-        "%d-%m-%Y_%H:%M:%S"
+        "%Y-%m-%d_%H:%M:%S"
     )
     output_dir = create_subdir(root_dir, timestamp)
     # dump the config file in the output directory
