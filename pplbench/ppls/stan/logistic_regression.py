@@ -24,7 +24,7 @@ class LogisticRegression(BaseStanImplementation):
         # transpose the dataset to ensure that it is the way we expect
         data = data.transpose("item", "feature")
         # we already have all the values to be bound except for X and Y in self.attrs
-        attrs = self.attrs.copy()
+        attrs: dict = self.attrs.copy()
         attrs["X"] = data.X.values
         attrs["Y"] = data.Y.values
         return attrs
@@ -56,7 +56,7 @@ class LogisticRegression(BaseStanImplementation):
 
     def get_code(self) -> str:
         """
-        :returns: Returns a string the represents the Stan model.
+        :returns: Returns a string that represents the Stan model.
         """
         return """
 data {
