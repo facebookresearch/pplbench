@@ -87,7 +87,7 @@ def generate_pll_plot(
     ax = plt.gca()
     ax.set_xlabel("Samples")
     ax.set_ylabel("Predictive Log Likelihood")
-    ax.yaxis.set_major_formatter(mticker.FormatStrFormatter("%.1e"))
+    ax.yaxis.set_major_formatter(mticker.FormatStrFormatter("%.3e"))
     plt.savefig(
         os.path.join(output_dir, f"{file_prefix}.{suffix}"),
         bbox_inches="tight",
