@@ -24,13 +24,22 @@ class MCMC(BasePPLInference):
         pass
 
     def infer(  # type: ignore
-        self, data: xr.Dataset, num_samples: int, seed: int, adapt: int = 0
+        self,
+        data: xr.Dataset,
+        num_samples: int,
+        seed: int,
+        adapt: int = 0,
+        RNG_name: str = "base::Mersenne-Twister",
     ) -> xr.Dataset:
         """
+        See https://phoenixnap.dl.sourceforge.net/project/mcmc-jags/Manuals/4.x/jags_user_manual.pdf
+        for JAGS documentation.
+
         :param data: PPLBench dataset
         :param num_samples: number of samples to create
         :param seed: seed for random number generator
         :param adapt: the number of adaptive steps
+        :param RNG_name: the name of the random number generator
         :returns: samples dataset
         """
         model = pyjags.Model(
@@ -38,6 +47,7 @@ class MCMC(BasePPLInference):
             data=self.impl.format_data_to_jags(data),
             chains=1,
             adapt=adapt,
+            init={".RNG.seed": seed, ".RNG.name": RNG_name},
         )
         samples = model.sample(num_samples, vars=self.impl.get_vars())
         # squeeze out the chain dimension from the samples
