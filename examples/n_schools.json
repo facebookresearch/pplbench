@@ -1,11 +1,18 @@
 {
     "model": {
         "class": "n_schools.NSchools",
-        "args": {"n": 2000, "num_states": 8, "num_districts_per_state": 5}
+        "args": {"n": 20000, "num_states": 20, "num_districts_per_state": 10}
     },
     "num_samples": 1500,
-    "trials": 2,
+    "trials": 3,
     "ppls": [
+        {
+            "name": "jags",
+            "inference": {
+                "class": "inference.MCMC"
+            },
+            "legend":{"color":"yellow", "name": "jags"}
+        },
         {
             "name": "stan",
             "inference": {
