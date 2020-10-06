@@ -3,6 +3,7 @@ import logging
 import os
 import sys
 from types import SimpleNamespace
+from typing import List, Optional
 
 from jsonargparse import ActionJsonSchema, ArgumentParser
 
@@ -104,9 +105,9 @@ LOGGER = logging.getLogger("pplbench")
 LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 
 
-def main() -> None:
+def main(args: Optional[List[str]] = None) -> None:
     # first load the configuration, start logging and find all needed classes
-    config = read_config()
+    config = read_config(args)
     output_dir = utils.create_output_dir(config)
     configure_logging(config, output_dir)
     model_cls = model_helper.find_model_class(config.model)
@@ -131,14 +132,14 @@ def main() -> None:
     LOGGER.info(f"Output saved in '{output_dir}'")
 
 
-def read_config() -> SimpleNamespace:
+def read_config(args: Optional[List[str]]) -> SimpleNamespace:
     """
     Parse command line arguments and return a JSON object.
     :returns: benchmark configuration.
     """
     parser = ArgumentParser()
     parser.add_argument("config", action=ActionJsonSchema(schema=SCHEMA), help="%s")
-    config = parser.parse_args().config
+    config = parser.parse_args(args).config
     return config
 
 
