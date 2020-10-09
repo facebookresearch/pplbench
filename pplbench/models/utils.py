@@ -18,6 +18,20 @@ def log1pexp(x: np.ndarray) -> np.ndarray:
     return y
 
 
+def log1mexpm(x: np.ndarray) -> np.ndarray:
+    """
+    Compute log(1 - exp(-x)) in a numerically stable way for x > 0,
+    see https://cran.r-project.org/web/packages/Rmpfr/vignettes/log1mexp-note.pdf eqn 7
+    :param x: numpy array of numbers >= 0
+    :returns: log(1 - exp(-x))
+    """
+    y = np.zeros_like(x)
+    x_low, x_high = x < 0.693, x >= 0.693
+    y[x_low] = np.log(-(np.expm1(-x[x_low])))
+    y[x_high] = np.log1p(-(np.exp(-x[x_high])))
+    return y
+
+
 def split_train_test(
     data: xr.Dataset, coord_name: str, train_frac: float
 ) -> Tuple[xr.Dataset, xr.Dataset]:
