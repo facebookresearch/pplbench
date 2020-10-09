@@ -86,7 +86,8 @@ jobs:
   test_example_json_py37_pip:
     docker:
       - image: circleci/python:3.7
-    parallelism: 2
+    resource_class: large
+    parallelism: 3
     steps:
       - checkout
       - upgrade_pip

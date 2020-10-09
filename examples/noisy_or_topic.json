@@ -1,0 +1,33 @@
+{
+    "model": {
+        "class": "noisy_or_topic.NoisyOrTopic",
+        "args": {
+            "n": 2,
+            "num_topics": 1000,
+            "num_words": 10000
+        }
+    },
+    "num_samples": 20000,
+    "trials": 3,
+    "ppls": [
+        {
+            "name": "jags",
+            "inference": {
+                "class": "inference.MCMC"
+            },
+            "legend": {
+                "color": "yellow",
+                "name": "jags"
+            }
+        }
+    ],
+    "save_samples": true,
+    "loglevels": {
+        "pystan": "INFO",
+        "pplbench": "INFO"
+    },
+    "figures": {
+        "generate_pll": true,
+        "suffix": "png"
+    }
+}
