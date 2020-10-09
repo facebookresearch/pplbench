@@ -87,6 +87,7 @@ jobs:
     docker:
       - image: circleci/python:3.7
     parallelism: 2
+    resource_class: medium+
     steps:
       - checkout
       - upgrade_pip
@@ -105,7 +106,7 @@ aliases:
 
 workflows:
 
-  lint:
+  lint_and_test:
     jobs:
       - lint_py37_pip:
           filters: *exclude_ghpages_fbconfig
