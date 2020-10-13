@@ -3,13 +3,27 @@
         "class": "noisy_or_topic.NoisyOrTopic",
         "args": {
             "n": 2,
-            "num_topics": 1000,
-            "num_words": 10000
+            "num_topics": 20,
+            "num_words": 200,
+            "avg_fanout": 10.0
         }
     },
-    "num_samples": 20000,
+    "num_samples": 2000,
     "trials": 3,
     "ppls": [
+        {
+            "name": "pymc3",
+            "inference": {
+                "class": "inference.MCMC",
+                "infer_args": {
+                    "algorithm": "BinaryGibbsMetropolis"
+                }
+            },
+            "legend": {
+                "color": "green",
+                "name": "pymc3-Gibbs"
+            }
+        },
         {
             "name": "jags",
             "inference": {
