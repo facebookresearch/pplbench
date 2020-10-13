@@ -1,34 +1,67 @@
 {
-    "model": {
-      "class": "robust_regression.RobustRegression",
-      "args": {"n": 2000, "k": 10}
-    },
-    "num_samples": 1500,
-    "trials": 3,
-    "ppls": [
-      {
-        "name": "stan",
-        "inference": {
-          "class": "inference.VI",
-          "infer_args": {"algorithm": "meanfield"}
-        },
-        "legend": {"color": "red", "name": "stan-VI-mean"}
+  "model": {
+    "class": "robust_regression.RobustRegression",
+    "args": {
+      "n": 2000,
+      "k": 10
+    }
+  },
+  "num_samples": 1500,
+  "trials": 3,
+  "ppls": [
+    {
+      "name": "jags",
+      "inference": {
+        "class": "inference.MCMC"
       },
-      {
-        "name": "stan",
-        "inference": {
-          "class": "inference.VI",
-          "infer_args": {"algorithm": "fullrank"}
-        },
-        "legend": {"color": "purple", "name": "stan-VI-full"}
-      },
-      {
-        "name": "stan",
-        "inference": {"class": "inference.MCMC"},
-        "legend": {"color": "blue"}
+      "legend": {
+        "color": "yellow",
+        "name": "jags"
       }
-    ],
-    "save_samples": true,
-    "loglevels": {"pystan": "INFO", "pplbench": "INFO"},
-    "figures": {"generate_pll": true, "suffix": "png"}
+    },
+    {
+      "name": "stan",
+      "inference": {
+        "class": "inference.VI",
+        "infer_args": {
+          "algorithm": "meanfield"
+        }
+      },
+      "legend": {
+        "color": "red",
+        "name": "stan-VI-mean"
+      }
+    },
+    {
+      "name": "stan",
+      "inference": {
+        "class": "inference.VI",
+        "infer_args": {
+          "algorithm": "fullrank"
+        }
+      },
+      "legend": {
+        "color": "purple",
+        "name": "stan-VI-full"
+      }
+    },
+    {
+      "name": "stan",
+      "inference": {
+        "class": "inference.MCMC"
+      },
+      "legend": {
+        "color": "blue"
+      }
+    }
+  ],
+  "save_samples": true,
+  "loglevels": {
+    "pystan": "INFO",
+    "pplbench": "INFO"
+  },
+  "figures": {
+    "generate_pll": true,
+    "suffix": "png"
   }
+}
