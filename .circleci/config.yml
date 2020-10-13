@@ -87,7 +87,7 @@ jobs:
     docker:
       - image: circleci/python:3.7
     resource_class: large
-    parallelism: 3
+    parallelism: 4
     steps:
       - checkout
       - upgrade_pip
