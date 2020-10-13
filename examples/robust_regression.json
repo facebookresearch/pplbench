@@ -53,6 +53,15 @@
       "legend": {
         "color": "blue"
       }
+    },
+    {
+      "name": "pymc3",
+      "inference": {
+        "class": "inference.MCMC"
+      },
+      "legend": {
+        "color": "green"
+      }
     }
   ],
   "save_samples": true,
