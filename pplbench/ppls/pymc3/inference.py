@@ -35,7 +35,7 @@ class MCMC(BasePyMC3Inference):
         model = self.impl.get_model(data)
         with model:
             # Dynamically loading the step method from pymc3
-            step_method = getattr(pm, algorithm)(**infer_args)
+            step_method = getattr(pm, algorithm)(model.vars, **infer_args)
             samples = pm.sample(
                 draws=num_samples,
                 step=step_method,

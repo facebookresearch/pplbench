@@ -55,7 +55,7 @@ class NoisyOrTopic(BaseModel):
         for k in 1 .. num_topics
 
             draw a subset J from the set {k+1 .. num_topics+num_words}
-                s.t. |J| ~ Poisson(avg_fanout)
+                s.t. |J| ~ max(1, Poisson(avg_fanout))
 
             for j in J
                 edge_weight[j, k] ~ Exp(avg_topic_weight)
@@ -120,9 +120,7 @@ class NoisyOrTopic(BaseModel):
         for node in range(1, num_topics + 1):
             prob = 1 - np.exp(-edge_weight[node, :] @ active)
             active[node] = rng.binomial(1, prob)
-            num_children = rng.poisson(avg_fanout)
-            if num_children == 0:
-                continue
+            num_children = max(1, rng.poisson(avg_fanout))
             # say we have 4 topics and 7 words and node=2 then the possible children
             # are 3, 4, .. 11
             poss_children = node + 1 + np.arange(num_words + num_topics - node)
