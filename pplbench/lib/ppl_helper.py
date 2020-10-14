@@ -128,7 +128,7 @@ def collect_samples_and_stats(
             Data variables: pll (ppl, chain, draw), timing (ppl, chain, phase)
     """
     all_variable_metrics, all_pll, all_timing, all_names = [], [], [], []
-    all_samples = []
+    all_samples, all_overall_neff, all_overall_neff_per_time = [], [], []
     for pplobj in all_ppl_details:
         all_names.append(pplobj.name)
         rand = np.random.RandomState(pplobj.seed)
@@ -178,6 +178,22 @@ def collect_samples_and_stats(
         LOGGER.info(str(neff_data.data_vars))
         LOGGER.info("==  Rhat ===")
         LOGGER.info(str(rhat_data.data_vars))
+
+        # compute ess/time
+        neff_df = neff_data.to_dataframe()
+        overall_neff = [
+            neff_df.values.min(),
+            np.median(neff_df.values),
+            neff_df.values.max(),
+        ]
+        mean_inference_time = np.mean(np.array(trial_timing)[:, 1])
+        overall_neff_per_time = np.array(overall_neff) / mean_inference_time
+
+        LOGGER.info("== overall n_eff [min, median, max]===")
+        LOGGER.info(str(overall_neff))
+        LOGGER.info("== overall n_eff/s [min, median, max]===")
+        LOGGER.info(str(overall_neff_per_time))
+
         trial_variable_metrics_data = xr.concat(
             [neff_data, rhat_data], pd.Index(data=["n_eff", "Rhat"], name="metric")
         )
@@ -185,6 +201,8 @@ def collect_samples_and_stats(
         all_pll.append(trial_pll)
         all_timing.append(trial_timing)
         all_samples.append(trial_samples_data)
+        all_overall_neff.append(overall_neff)
+        all_overall_neff_per_time.append(overall_neff_per_time)
     # merge the trial-level metrics at the PPL level
     all_variable_metrics_data = xr.concat(
         all_variable_metrics, pd.Index(data=all_names, name="ppl")
@@ -193,12 +211,15 @@ def collect_samples_and_stats(
         {
             "timing": (["ppl", "chain", "phase"], all_timing),
             "pll": (["ppl", "chain", "draw"], all_pll),
+            "overall_neff": (["ppl", "percentile"], all_overall_neff),
+            "overall_neff_per_time": (["ppl", "percentile"], all_overall_neff_per_time),
         },
         coords={
             "ppl": np.array(all_names),
             "chain": np.arange(config.trials),
             "phase": np.array(["compile", "infer"]),
             "draw": np.arange(config.num_samples),
+            "percentile": np.array(["min", "median", "max"]),
         },
     )
     all_samples_data = xr.concat(all_samples, pd.Index(data=all_names, name="ppl"))
