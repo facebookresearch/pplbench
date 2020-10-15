@@ -1,5 +1,5 @@
 # Copyright(C) Facebook, Inc. and its affiliates. All Rights Reserved.
-from typing import Dict, Type, cast
+from typing import Dict, Optional, Type, cast
 
 import pyjags
 import xarray as xr
@@ -28,7 +28,7 @@ class MCMC(BasePPLInference):
         data: xr.Dataset,
         num_samples: int,
         seed: int,
-        adapt: int = 0,
+        adapt: Optional[int] = None,
         RNG_name: str = "base::Mersenne-Twister",
     ) -> xr.Dataset:
         """
@@ -42,6 +42,9 @@ class MCMC(BasePPLInference):
         :param RNG_name: the name of the random number generator
         :returns: samples dataset
         """
+        if adapt is None:
+            adapt = num_samples
+
         model = pyjags.Model(
             code=self.impl.get_code(),
             data=self.impl.format_data_to_jags(data),
