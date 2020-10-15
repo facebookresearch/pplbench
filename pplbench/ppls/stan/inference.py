@@ -1,6 +1,6 @@
 # Copyright(C) Facebook, Inc. and its affiliates. All Rights Reserved.
 from collections import OrderedDict
-from typing import Dict, Type, cast
+from typing import Dict, Optional, Type, cast
 
 import numpy as np
 import xarray as xr
@@ -33,16 +33,21 @@ class MCMC(BaseStanInference):
         data: xr.Dataset,
         num_samples: int,
         seed: int,
+        warmup: Optional[int] = None,
         algorithm: str = "NUTS",
         **infer_args
     ) -> xr.Dataset:
         """
         See https://pystan.readthedocs.io/en/latest/api.html#pystan.StanModel.vb
         """
+        if warmup is None:
+            warmup = num_samples
+
         self.fit = self.stan_model.sampling(
             data=self.impl.format_data_to_stan(data),
             pars=self.impl.get_pars(),
-            iter=num_samples,
+            iter=num_samples + warmup,
+            warmup=warmup,
             chains=1,
             check_hmc_diagnostics=False,
             seed=seed,
@@ -50,7 +55,7 @@ class MCMC(BaseStanInference):
             **infer_args
         )
         results = self.fit.extract(
-            permuted=False, inc_warmup=True, pars=self.impl.get_pars()
+            permuted=False, inc_warmup=False, pars=self.impl.get_pars()
         )
         return self.impl.extract_data_from_stan(results)
 
