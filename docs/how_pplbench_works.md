@@ -1,16 +1,16 @@
-## How PPL Bench works
+# How PPL Bench works
 
 ![](figs/system_overview.png)
 
-1) Generate Data
+### 1) Generate Data
 
 The first step is to simulate data (train and test) given the generative model and model parameters. To do this, one can use Numpy or any other Python library that can be used to draws samples from probability distributions. Once this is defined, when benchmarking this model, PPL Bench will use the data generated from this function across all PPLs.
 
-2) Implement Model in a PPL
+### 2) Implement Model in a PPL
 
 Once we have simulated data for a given model, PPL Bench will go through the PPLs which have implemented the model in question. For every PPL that you want to benchmark against, you will need a corresponding model implementation in that PPL.
 
-3) Evaluate Different PPLs
+### 3) Evaluate Different PPLs
 
 PPL Bench automatically generates predictive log likelihood plots (plotted against samples) on the same test dataset across all PPLs.
 
