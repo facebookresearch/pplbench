@@ -12,6 +12,15 @@
     "trials": 3,
     "ppls": [
         {
+            "name": "stan",
+            "inference": {
+                "class": "inference.MCMC"
+            },
+            "legend": {
+                "color": "blue"
+            }
+        },
+        {
             "name": "pymc3",
             "inference": {
                 "class": "inference.MCMC",
