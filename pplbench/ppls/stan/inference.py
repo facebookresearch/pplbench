@@ -19,15 +19,22 @@ class BaseStanInference(BasePPLInference):
         self.impl_class = cast(Type[BaseStanImplementation], impl_class)
         self.impl = self.impl_class(**model_attrs)
 
-    def compile(self, seed: int):  # type: ignore
+    def compile(self, seed: int, **compile_args):
         self.stan_model = StanModel(
-            model_code=self.impl.get_code(), model_name=self.impl_class.__name__
+            model_code=self.impl.get_code(),
+            model_name=self.impl_class.__name__,
+            **compile_args
         )
 
 
 class MCMC(BaseStanInference):
-    def infer(  # type: ignore
-        self, data: xr.Dataset, num_samples: int, seed: int, algorithm: str = "NUTS"
+    def infer(
+        self,
+        data: xr.Dataset,
+        num_samples: int,
+        seed: int,
+        algorithm: str = "NUTS",
+        **infer_args
     ) -> xr.Dataset:
         """
         See https://pystan.readthedocs.io/en/latest/api.html#pystan.StanModel.vb
@@ -40,6 +47,7 @@ class MCMC(BaseStanInference):
             check_hmc_diagnostics=False,
             seed=seed,
             algorithm=algorithm,
+            **infer_args
         )
         results = self.fit.extract(
             permuted=False, inc_warmup=True, pars=self.impl.get_pars()
