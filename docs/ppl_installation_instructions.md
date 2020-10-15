@@ -1,28 +1,39 @@
-## Instructions to install specific PPLs.
+# Instructions to install specific PPLs.
 
- **Stan**
+## **Stan**
 
-     1. `pip install pystan`
+```
+pip install pystan
+```
 
- **Jags**
+## **Jags**
 
-     1. `sudo apt-get install jags`
-     2. `sudo apt install pkg-config`
-     3. `pip install pyjags`
+```
+sudo apt-get install jags
+sudo apt install pkg-config
+pip install pyjags
+```
 
  If you are installing in a conda environment:
 
-     1. `conda install jags pkg-config`
-     2. `pip install pyjags`
+```
+conda install jags pkg-config
+pip install pyjags
+```
 
- **PyMC3**
+## **PyMC3**
+```
+pip install pymc3==3.9.0
+```
 
-     1. `pip install pymc3==3.9.0`
+## **Pyro**
 
- **Pyro**
+```
+pip install pyro-ppl==0.4.1
+```
 
-     1. `pip install pyro-ppl==0.4.1`
+## **NumPyro**
 
- **NumPyro**
-
-     1. `pip install numpyro==0.3.0`
+```
+pip install numpyro==0.3.0
+```
