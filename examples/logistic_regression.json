@@ -49,6 +49,14 @@
         "infer_args": {"algorithm": "FullRankADVI"}
       },
       "legend": {"color": "darkseagreen", "name": "pymc3-full"}
+    },
+    {
+      "name": "numpyro",
+      "inference": {
+        "class": "inference.MCMC",
+        "infer_args": {"algorithm": "NUTS"}
+      },
+      "legend": {"color": "orange", "name": "numpyro"}
     }
   ],
   "save_samples": true,
