@@ -65,7 +65,7 @@ commands:
           command: >
             circleci tests glob "examples/*.json" |
             circleci tests split |
-            xargs -n 1 -t python -um pplbench.main
+            xargs -n 1 -t python -um pplbench
 
 
 jobs:

@@ -74,4 +74,5 @@ setup(
     ],
     packages=find_packages(),
     extras_require={"dev": DEV_REQUIRES},
+    entry_points={"console_scripts": ["pplbench=pplbench.__main__:console_main"]},
 )

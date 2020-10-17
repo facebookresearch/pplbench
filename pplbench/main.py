@@ -163,7 +163,3 @@ def configure_logging(config: SimpleNamespace, output_dir: str) -> None:
         ch.setFormatter(formatter)
         logging.getLogger().addHandler(ch)
     LOGGER.debug(f"config - {str(config)}")
-
-
-if __name__ == "__main__":
-    main()
