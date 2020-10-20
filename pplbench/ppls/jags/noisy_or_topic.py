@@ -13,8 +13,8 @@ LOGGER = logging.getLogger(__name__)
 
 class NoisyOrTopic(BaseJagsImplementation):
     def __init__(self, **attrs: Dict) -> None:
-        self.num_topics = attrs["num_topics"]
-        self.num_words = attrs["num_words"]
+        self.num_topics: int = attrs["num_topics"]  # type: ignore
+        self.num_words: int = attrs["num_words"]  # type: ignore
         self.edge_weight = attrs["edge_weight"]
 
     def get_vars(self) -> List[str]:
