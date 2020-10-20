@@ -1,4 +1,8 @@
-# Instructions to install specific PPLs.
+---
+id: working_with_ppls
+title: Working with PPLs
+---
+For the PPL Bench to benchmark a probabilistic programming language, you need to first install the PPLs of interest.
 
 ## **Stan**
 

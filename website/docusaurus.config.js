@@ -10,7 +10,7 @@ const remarkMath = require('remark-math');
 const rehypeKatex = require('rehype-katex');
 
 module.exports = {
-  title: 'PPL Bench', // Title for your website.
+  title: 'PPL Bench',
   tagline: 'Evaluation Framework for Probabilistic Programming Languages',
   url: 'https://pplbench.org',
   baseUrl: '/',
@@ -26,13 +26,13 @@ module.exports = {
         src: 'img/pplbench_logo_no_text.png',
       },
       items: [
-        // {
-        //   to: "docs/",
-        //   activeBasePath: "docs",
-        //   label: "Docs",
-        //   position: "left",
-        // },
-        // { to: "blog", label: "Blog", position: "left" },
+        {
+          to: 'docs/introduction',
+          activeBasePath: 'docs/introduction',
+          label: 'Docs',
+          position: 'left',
+        },
+        {to: 'blog', label: 'Blog', position: 'left'},
         // Please keep GitHub link to the right for consistency.
         {
           href: 'https://github.com/facebookresearch/pplbench',
@@ -44,19 +44,28 @@ module.exports = {
     footer: {
       style: 'dark',
       links: [
-        // {
-        //   title: "Learn",
-        //   items: [
-        //     {
-        //       label: "Style Guide",
-        //       to: "docs/",
-        //     },
-        //     {
-        //       label: "Second Doc",
-        //       to: "docs/doc2",
-        //     },
-        //   ],
-        // },
+        {
+          title: 'Docs',
+          items: [
+            {
+              label: 'Introduction',
+              to: 'docs/introduction',
+            },
+            {
+              label: 'Getting Started',
+              to: 'docs/getting_started',
+            },
+            // {
+            //   label: "API Reference",
+            //   to: "api/TO_ADD"
+            // },
+            // {
+            //   label: 'Paper',
+            //   to: 'https://arxiv.org/abs/TO_ADD',
+            // },
+          ],
+        },
+
         {
           title: 'More',
           items: [
@@ -100,7 +109,9 @@ module.exports = {
       '@docusaurus/preset-classic',
       {
         docs: {
-          path: '../docs',
+          path: '../docs/',
+          // homePageId: '/docs/toc',
+          sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
           editUrl:
             'https://github.com/facebookresearch/pplbench/edit/master/website/',

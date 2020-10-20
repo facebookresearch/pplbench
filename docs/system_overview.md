@@ -1,6 +1,10 @@
-# How PPL Bench works
+---
+id: system_overview
+title: System Overview
+---
+![](assets/system_overview_with_background.png)
 
-![](figs/system_overview.png)
+## How PPL Bench works
 
 ### 1) Generate Data
 

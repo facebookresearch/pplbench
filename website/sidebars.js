@@ -9,6 +9,8 @@
 
 module.exports = {
   someSidebar: {
-   Introduction: ['specifications']
+    About: ['introduction'],
+    General: ['getting_started', 'working_with_ppls'],
+    'Basic Concepts': ['system_overview', 'models'],
   },
 };
