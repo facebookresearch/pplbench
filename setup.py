@@ -10,8 +10,14 @@ from setuptools import find_packages, setup
 REQUIRED_MAJOR = 3
 REQUIRED_MINOR = 6
 
+PPLS_REQUIRE = [
+    "pystan>=2.19.1.1",
+    "pymc3>=3.9.0",
+    "pyro-ppl>=0.4.1",
+    "numpyro>=0.3.0",
+]
+DEV_REQUIRE = PPLS_REQUIRE + ["black==19.3b0", "isort", "flake8"]
 
-DEV_REQUIRES = ["black==19.3b0", "isort", "flake8"]
 
 # Check for python version
 if sys.version_info < (REQUIRED_MAJOR, REQUIRED_MINOR):
@@ -39,12 +45,15 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
-    name="PPLBench",
+    name="pplbench",
     version=version,
     description="Evaluation framework for probabilistic programming languages",
     author="Facebook, Inc.",
     license="MIT",
-    project_urls={"Source": "https://github.com/facebookresearch/pplbench"},
+    project_urls={
+        "Documentation": "https://pplbench.org",
+        "Source": "https://github.com/facebookresearch/pplbench",
+    },
     keywords=[
         "Probabilistic Programming Language",
         "Bayesian Inference",
@@ -64,15 +73,16 @@ setup(
     long_description_content_type="text/markdown",
     python_requires=">=3.6",
     install_requires=[
-        "torch>=1.4.0",
-        "numpy>=1.16.2",
-        "pandas>=0.24.2",
-        "matplotlib>=3.0.3",
-        "scipy>=0.16",
-        "pandas>=0.24.2",
-        "scikit-learn>=0.23.1",
+        "jsonargparse>=2.32.2",
+        "jsonschema>=3.2.0",
+        "numpy>=1.18.5",
+        "scipy>=1.5.0",
+        "pandas>=1.0.1",
+        "matplotlib>=3.1.3",
+        "xarray>=0.16.0",
+        "arviz>=0.9.0",
     ],
     packages=find_packages(),
-    extras_require={"dev": DEV_REQUIRES},
+    extras_require={"dev": DEV_REQUIRE, "ppls": PPLS_REQUIRE},
     entry_points={"console_scripts": ["pplbench=pplbench.__main__:console_main"]},
 )

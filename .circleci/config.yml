@@ -16,19 +16,21 @@ commands:
             sudo pip install --progress-bar off black==19.3b0 isort==4.3.21
             flake8==3.8.1 mypy==0.782
 
-  pip_install_core_deps:
+  pip_install_pplbench_core:
     steps:
       - run:
-          name: "Install PPLBench core dependencies"
-          command: sudo pip install --progress-bar off -r requirements.txt
+          name: "Install PPL Bench core"
+          command: sudo pip install --progress-bar off .
 
-  pip_install_ppls:
+  pip_install_pplbench_all:
     steps:
       - run:
-          name: "Install PPLs"
+          name: "Install PPL Bench with all PPLs"
           command: |
-            sudo apt-get install jags
-            sudo pip install --progress-bar off pystan pyjags pymc3 pyro-ppl numpyro
+            sudo pip install --progress-bar off .[ppls]
+            # Install Jags-related dependencies
+            sudo apt install pkg-config jags
+            sudo pip install pyjags
 
   lint_flake8:
     steps:
@@ -49,7 +51,7 @@ commands:
     steps:
       - run:
           name: "Lint with black"
-          command: black --check --diff --line-length=88 .
+          command: black --check --diff --line-length=88 pplbench
 
   lint_mypy:
     steps:
@@ -65,7 +67,7 @@ commands:
           command: >
             circleci tests glob "examples/*.json" |
             circleci tests split |
-            xargs -n 1 -t python -um pplbench
+            xargs -n 1 -t pplbench
 
 
 jobs:
@@ -80,7 +82,7 @@ jobs:
       - lint_flake8
       - lint_isort
       - lint_black
-      - pip_install_core_deps
+      - pip_install_pplbench_core
       - lint_mypy
 
   test_example_json_py37_pip:
@@ -91,8 +93,7 @@ jobs:
     steps:
       - checkout
       - upgrade_pip
-      - pip_install_core_deps
-      - pip_install_ppls
+      - pip_install_pplbench_all
       - run_example_json
 
 aliases:

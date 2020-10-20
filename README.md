@@ -22,19 +22,27 @@ PPL Bench is a new benchmark framework for evaluating the performance of probabi
 
 2. Installing dependencies:
     1. Enter a virtual (or conda) environment
-    2. PPL Bench core:
+    2. Install PPL Bench core:
 
-        `pip install -r requirements.txt`
-    3. Install PPLs that you wish to benchmark. For instructions, see [Installing PPLs](docs/ppl_installation_instructions.md). Let's install PyStan so we can run the example run below.
+        `pip install .`
+    3. Install PPLs that you wish to benchmark. For PPL-specific instructions, see [Installing PPLs](docs/ppl_installation_instructions.md).
+    You could also run the following command to install all PPLs that are currently supported by PPL Bench (except for Jags):
 
-        `pip install pystan`
+        `pip install .[ppls]`
 
 ## Getting Started
 
-Let's dive right in with a benchmark run of Bayesian Logistic Regression. Run the following command:
+Let's dive right in with a benchmark run of Bayesian Logistic Regression. To run this, you'll need to install
+PyStan (if you haven't already):
 
 ```
-python -m pplbench examples/example.json
+pip install pystan
+```
+
+Then,
+
+```
+pplbench examples/example.json
 ```
 
 This will create a benchmark run with two trials of Stan on the Bayesian Logistic Regression model. The results of the run are saved in the `pplbench/outputs/` directory.
@@ -45,7 +53,7 @@ This is what the PLL plot should look like:
 Please see the [examples/example.json](examples/example.json) file to understand the schema for specifying benchmark runs. The schema is documented in [pplbench/main.py](pplbench/main.py) and can be printed by running the help command:
 
 ```
-python -m pplbench -h
+pplbench -h
 ```
 
 A number of models is available in the `pplbench/models` directory and the PPL implementations are available in the `pplbench/ppls` directory.
