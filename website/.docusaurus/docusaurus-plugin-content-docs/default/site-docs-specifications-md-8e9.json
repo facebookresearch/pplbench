@@ -1,0 +1,13 @@
+{
+  "unversionedId": "specifications",
+  "id": "specifications",
+  "isDocsHomePage": false,
+  "title": "specifications",
+  "description": "PPLBench System Specification",
+  "source": "@site/../docs/SPECIFICATIONS.md",
+  "slug": "/specifications",
+  "permalink": "/docs/specifications",
+  "editUrl": "https://github.com/facebookresearch/pplbench/edit/master/website/../docs/SPECIFICATIONS.md",
+  "version": "current",
+  "sidebar": "someSidebar"
+}
