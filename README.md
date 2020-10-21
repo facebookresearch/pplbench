@@ -11,7 +11,7 @@
 
 ## What is PPL Bench?
 
-PPL Bench is a new benchmark framework for evaluating the performance of probabilistic programming languages (PPLs).
+PPL Bench is a new benchmark framework for evaluating probabilistic programming languages (PPLs).
 
 
 ## Installing
@@ -47,7 +47,7 @@ pplbench examples/example.json
 
 This will create a benchmark run with two trials of Stan on the Bayesian Logistic Regression model. The results of the run are saved in the `pplbench/outputs/` directory.
 
-This is what the PLL plot should look like:
+This is what the Predictive Log Likelihood (PLL) plot should look like:
 ![PLL plot of example run](docs/assets/example_pll.png)
 
 Please see the [examples/example.json](examples/example.json) file to understand the schema for specifying benchmark runs. The schema is documented in [pplbench/main.py](pplbench/main.py) and can be printed by running the help command:
