@@ -1,5 +1,6 @@
 ![](docs/assets/logo.png)
 
+[![facebookresearch](https://circleci.com/gh/facebookresearch/pplbench.svg?style=svg)](https://app.circleci.com/pipelines/github/facebookresearch/pplbench)
 
 # Getting Started with PPL Bench
 
