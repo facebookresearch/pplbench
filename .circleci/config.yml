@@ -1,0 +1,161 @@
+version: 2.1
+
+commands:
+
+  upgrade_pip:
+    steps:
+      - run:
+          name: "Upgrade pip"
+          command: sudo pip install --progress-bar off --upgrade pip
+
+  pip_install_linters:
+    steps:
+      - run:
+          name: "Install lint packages"
+          command: >
+            sudo pip install --progress-bar off black==20.8b1 isort==4.3.21
+            flake8==3.8.1 mypy==0.782
+
+  pip_install_pplbench_core:
+    steps:
+      - run:
+          name: "Install PPL Bench core"
+          command: sudo pip install --progress-bar off .
+
+  pip_install_pplbench_all:
+    steps:
+      - run:
+          name: "Install PPL Bench with all PPLs"
+          command: |
+            sudo pip install --progress-bar off .[ppls]
+            # Install Jags-related dependencies
+            sudo apt install pkg-config jags
+            sudo pip install pyjags
+
+  lint_flake8:
+    steps:
+      - run:
+          name: "Lint with flake8"
+          command: flake8 .
+
+  lint_isort:
+    steps:
+      - run:
+          name: "Lint with isort"
+          command: >
+            isort --check-only --diff --line-width=88 --multi-line=3
+            --trailing-comma --force-grid-wrap=0 --section-default=THIRDPARTY
+            --lines-after-imports=2 --combine-as
+
+  lint_black:
+    steps:
+      - run:
+          name: "Lint with black"
+          command: black --check --diff --line-length=88 pplbench
+
+  lint_mypy:
+    steps:
+      - run:
+          name: "Lint with mypy"
+          command: mypy -p pplbench
+
+  run_example_json:
+    steps:
+      - run:
+          name: "Run JSON files under examples directory"
+          no_output_timeout: 30m
+          command: >
+            circleci tests glob "examples/*.json" |
+            circleci tests split |
+            xargs -n 1 -t pplbench
+
+  package_pplbench:
+    steps:
+      - run:
+          name: "Install packaging dependencies"
+          command: sudo pip install --progress-bar off setuptools wheel twine
+      - run:
+          name: "Build source distribution"
+          command: python setup.py sdist
+      - run:
+          name: "Build Python 3 wheel"
+          command: python setup.py bdist_wheel
+
+  upload_pplbench:
+    steps:
+      - run:
+          name: "Upload PPL Bench to PyPI using twine"
+          no_output_timeout: 30m
+          command: twine upload dist/* --disable-progress-bar
+
+jobs:
+
+  lint_py37_pip:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - checkout
+      - upgrade_pip
+      - pip_install_linters
+      - lint_flake8
+      - lint_isort
+      - lint_black
+      - pip_install_pplbench_core
+      - lint_mypy
+
+  test_example_json_py37_pip:
+    docker:
+      - image: circleci/python:3.7
+    resource_class: large
+    parallelism: 4
+    steps:
+      - checkout
+      - upgrade_pip
+      - pip_install_pplbench_all
+      - run_example_json
+
+  package_and_upload_pplbench:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - checkout
+      - upgrade_pip
+      - package_pplbench
+      - upload_pplbench
+
+aliases:
+
+  - &exclude_ghpages_fbconfig
+    branches:
+      ignore:
+        - gh-pages
+        - fb-config
+
+  - &versioned_tags_only
+    branches:
+      # to prevent CircleCI from starting a workflow run for each branch
+      ignore: /.*/
+    tags:
+      # See PEP 440 version scheme: https://www.python.org/dev/peps/pep-0440/#version-scheme
+      only: /^v([1-9][0-9]*!)?(0|[1-9][0-9]*)(\.(0|[1-9][0-9]*))*((a|b|rc)(0|[1-9][0-9]*))?(\.post(0|[1-9][0-9]*))?(\.dev(0|[1-9][0-9]*))?$/
+
+workflows:
+
+  lint_and_test:
+    jobs:
+      - lint_py37_pip:
+          filters: *exclude_ghpages_fbconfig
+      - test_example_json_py37_pip:
+          filters: *exclude_ghpages_fbconfig
+
+  build_and_deploy:
+    jobs:
+      - lint_py37_pip:
+          filters: *versioned_tags_only
+      - test_example_json_py37_pip:
+          filters: *versioned_tags_only
+      - package_and_upload_pplbench:
+          filters: *versioned_tags_only
+          requires:
+            - lint_py37_pip
+            - test_example_json_py37_pip
