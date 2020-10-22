@@ -1,3 +1,4 @@
+// Copyright (c) Facebook, Inc. and its affiliates.
 // Turn off ESLint for this file because it's sent down to users as-is.
 /* eslint-disable */
 window.addEventListener('load', function() {
