@@ -10,7 +10,7 @@
 module.exports = {
   someSidebar: {
     About: ['introduction'],
-    General: ['getting_started', 'working_with_ppls'],
-    'Basic Concepts': ['system_overview', 'models'],
+    General: ['getting_started', 'models', 'working_with_ppls'],
+    'Basic Concepts': ['system_overview'],
   },
 };
