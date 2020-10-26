@@ -68,7 +68,7 @@ Please feel free to submit pull requests to modify an existing PPL implementatio
 
 1. Blog post: [link](https://ai.facebook.com/blog/ppl-bench-creating-a-standard-for-benchmarking-probabilistic-programming-languages)
 2. Paper: [link](https://arxiv.org/abs/2010.08886)
-<!-- 3. Website: [link](https://pplbench.org) -->
+3. Website: [link](https://facebookresearch.github.io/pplbench/)
 
 See the [CONTRIBUTING.md](CONTRIBUTING.md) file for how to help out.
 

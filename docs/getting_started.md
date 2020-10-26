@@ -60,6 +60,6 @@ You'd like to contribute to PPL Bench? Great! Please see [here](https://github.c
 
  For more information about PPL Bench, refer to
 
-1. Website: [link](https://pplbench.org)
+1. Website: [link](https://facebookresearch.github.io/pplbench/)
 2. Blog post: [link](https://ai.facebook.com/blog/ppl-bench-creating-a-standard-for-benchmarking-probabilistic-programming-languages)
 3. Paper: [link](https://arxiv.org/abs/2010.08886)
