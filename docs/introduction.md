@@ -8,21 +8,29 @@ PPL Bench is a new benchmark framework for evaluating the performance of probabi
 
 ### Model Instantiation and Data Generation
 
-![Model Instantiation and Data Generation ](assets/model_instantiation.png)
+$$P_\theta(X,Z) =  P_\theta(Z)P_\theta(X|Z)\\$$
+$$Z_1 \sim P_\theta(Z)\\$$
+$$X_{full} \sim P_\theta(X|Z=Z_1)\\$$
+$$X_{train} = {X_{full}}_{1\ldots\frac{n}{2}}\\$$
+$$X_{test} = {X_{full}}_{\frac{n}{2}\ldots n}\\$$
 
 A model with all it's parameters set to certain values is referred to as a model instance.
+We establish a model $P_\theta(X,Z)$.
+We sample model-specific parameter values from their distributions.
 We then use the generative model to generate two sets of data - train data and test data.
+Here, $n$ refers to the total number of observations. By default, we do a 50-50 train-test split.
 This process of data generation is performed independent of any PPL.
 
 ### PPL Implementation and Posterior Sampling
 
-![PPL Implementation and Posterior Sampling ](assets/posterior_sampling.png)
+$$Z^*_{1...s} \sim P_\theta(Z | X = X_{train})$$
 
 The training data is passed to various PPL implementations to perform inference.
+We get $s$ posterior samples from inference.
 
 ### Evaluation of Posterior Samples
 
-![Evaluation of Posterior Samples](assets/pll.png)
+$$\text{Predictive Log Likelihood}(s) = \log \left( \frac{1}{s}\sum_{i=1}^{s}(P(X_{test}|Z=Z^*_{i})) \right)$$
 
 We compute Predictive Log Likelihood on the test data using posterior samples obtained from each PPL. We also compute other common evalutation metrics such as effective sample size, $r_{hat}$ and inference time.
 
