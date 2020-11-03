@@ -1,5 +1,8 @@
 ![](docs/assets/logo.png)
 
+[![Build status](https://github.com/facebookresearch/pplbench/workflows/build/badge.svg?branch=master)](https://github.com/facebookresearch/pplbench/actions?query=workflow%3Abuild)
+[![PyPI version](https://badge.fury.io/py/pplbench.svg)](https://pypi.org/project/pplbench/)
+
 # Getting Started with PPL Bench
 
 * [What is PPL Bench?](#what-is-ppl-bench)
