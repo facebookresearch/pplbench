@@ -1,4 +1,6 @@
-![](docs/assets/logo.png)
+[![](docs/assets/logo.png)]((https://facebookresearch.github.io/pplbench/))
+
+
 
 [![Build status](https://github.com/facebookresearch/pplbench/workflows/build/badge.svg?branch=master)](https://github.com/facebookresearch/pplbench/actions?query=workflow%3Abuild)
 [![PyPI version](https://badge.fury.io/py/pplbench.svg)](https://pypi.org/project/pplbench/)
@@ -6,7 +8,7 @@
 # Getting Started with PPL Bench
 
 * [What is PPL Bench?](#what-is-ppl-bench)
-* [Installing](#installing)
+* [Installing](#installation)
 * [Getting Started](#getting-started)
 
 
@@ -15,22 +17,24 @@
 
 PPL Bench is a new benchmark framework for evaluating probabilistic programming languages (PPLs).
 
+## Installation
 
-## Installing
+1. Enter a virtual (or conda) environment
+2. Install PPL Bench core via pip:
 
-1. Download/Clone PPL Bench:
+```
+pip install pplbench
+```
 
-    `git clone https://github.com/facebookresearch/pplbench.git`
+3. Install PPLs that you wish to benchmark. For PPL-specific instructions, see [Installing PPLs](docs/working_with_ppls.md).
+You could also run the following command to install all PPLs that are currently supported by PPL Bench (except for Jags):
 
-2. Installing dependencies:
-    1. Enter a virtual (or conda) environment
-    2. Install PPL Bench core:
+```
+pip install pplbench[ppls]
+```
 
-        `pip install .`
-    3. Install PPLs that you wish to benchmark. For PPL-specific instructions, see [Installing PPLs](docs/working_with_ppls.md).
-    You could also run the following command to install all PPLs that are currently supported by PPL Bench (except for Jags):
-
-        `pip install .[ppls]`
+Alternatively, you could also install PPL Bench from source. Please refer to [Installing PPLs](docs/working_with_ppls.md)
+for instructions.
 
 ## Getting Started
 
@@ -47,10 +51,12 @@ Then, run PPL Bench with example config:
 pplbench examples/example.json
 ```
 
-This will create a benchmark run with two trials of Stan on the Bayesian Logistic Regression model. The results of the run are saved in the `pplbench/outputs/` directory.
+This will create a benchmark run with two trials of Stan on the Bayesian Logistic Regression model. The results of the run are saved in the `outputs/` directory.
 
 This is what the Predictive Log Likelihood (PLL) plot should look like:
-![PLL plot of example run](docs/assets/example_pll.png)
+![PLL plot of example run](website/static/img/example_pystan_pll.svg)
+![PLL half plot of example run](website/static/img/example_pystan_pll_half.svg)
+
 
 Please see the [examples/example.json](examples/example.json) file to understand the schema for specifying benchmark runs. The schema is documented in [pplbench/main.py](pplbench/main.py) and can be printed by running the help command:
 

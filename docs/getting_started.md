@@ -6,40 +6,51 @@ This document outlines how to get started with PPL Bench.
 
 Before jumping into the project, we recommend you read [Introduction](introduction.md) and [System Overview](system_overview.md) documents.
 
-## Installing PPL Bench
+## Installation
 
-1. Download/Clone PPL Bench:
+1. Enter a virtual (or conda) environment
+2. Install PPL Bench core via pip:
 
-    `git clone https://github.com/facebookresearch/pplbench.git`
+```
+pip install pplbench
+```
 
-2. Installing dependencies:
-    1. Enter a virtual (or conda) environment
-    2. PPL Bench core:
+3. Install PPLs that you wish to benchmark. For PPL-specific instructions, see [Installing PPLs](working_with_ppls.md).
+You could also run the following command to install all PPLs that are currently supported by PPL Bench (except for Jags):
 
-        `pip install -r requirements.txt`
+```
+pip install pplbench[ppls]
+```
 
-    3. Install PPLs that you wish to benchmark. For instructions, see [Working with PPLs](working_with_ppls.md). Let's install PyStan so we can run the example run below.
-
-        `pip install pystan`
+Alternatively, you could also install PPL Bench from source. Please refer to [Installing PPLs](working_with_ppls.md)
+for instructions.
 
 ## Launching PPL Bench
 
-Let's dive right in with a benchmark run of Bayesian Logistic Regression. Run the following command:
+Let's dive right in with a benchmark run of Bayesian Logistic Regression. To run this, you'll need to install
+PyStan (if you haven't already):
 
 ```
-python -m pplbench.main examples/example.json
+pip install pystan
 ```
 
-This will create a benchmark run with two trials of Stan on the Bayesian Logistic Regression model. The results of the run are saved in the `pplbench/outputs/` directory.
+Then, run PPL Bench with example config:
 
-This is what the PLL plot should look like:
+```
+pplbench examples/example.json
+```
 
-![PLL plot of example run](assets/example_pll.png)
+This will create a benchmark run with two trials of Stan on the Bayesian Logistic Regression model. The results of the run are saved in the `outputs/` directory.
+
+This is what the Predictive Log Likelihood (PLL) plot should look like:
+
+![PLL plot of example run](../website/static/img/example_pystan_pll.svg)
+![PLL half plot of example run](../website/static/img/example_pystan_pll_half.svg)
 
 Please see the [examples/example.json](https://github.com/facebookresearch/pplbench/blob/master/examples/example.json) file to understand the schema for specifying benchmark runs. The schema is documented in [pplbench/main.py](https://github.com/facebookresearch/pplbench/blob/master/pplbench/main.py) and can be printed by running the help command:
 
 ```
-python -m pplbench.main -h
+pplbench -h
 ```
 
 A number of models is available in the `pplbench/models` directory and the PPL implementations are available in the `pplbench/ppls` directory.

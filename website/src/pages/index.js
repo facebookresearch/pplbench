@@ -16,6 +16,7 @@ import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import styles from './styles.module.css';
+import exampleJson from '../../../examples/example.json';
 
 const QuickStart = () => (
   <div id="quickstart" className={styles.gettingStartedSection}>
@@ -23,48 +24,113 @@ const QuickStart = () => (
       <div className="row">
         <div className="col">
           <h1 className="text--center">Get started in seconds</h1>
-
           <div>
             <ol>
               <li className="margin-top--sm">
-                <h3>1. Download PPL Bench:</h3>
-                <CodeBlock>
-                  git clone https://github.com/facebookresearch/pplbench.git
+                <h3>1. Install PPL Bench with supported PPLs:</h3>
+                <CodeBlock>pip install 'pplbench[ppls]'</CodeBlock>
+              </li>
+              <li>
+                <h3>2. Write a simple JSON config</h3>
+                <p>
+                  Let's store the following config into a file called{' '}
+                  <a href="https://github.com/facebookresearch/pplbench/blob/master/examples/example.json">
+                    <code>example.json</code>
+                  </a>
+                  .
+                </p>
+                <CodeBlock className="json">
+                  {JSON.stringify(exampleJson, null, 2)}
                 </CodeBlock>
               </li>
               <li>
-                <h3>2. Install PPL Bench:</h3>
-                <CodeBlock>{`pip install -r requirements.txt`}</CodeBlock>
+                <h3>3. Run PPL Bench:</h3>
+                <CodeBlock>pplbench example.json</CodeBlock>
+                <p>
+                  You should see the plots like followings in the output
+                  directory:
+                </p>
+                <div className="container">
+                  <div className="row">
+                    <div className="col col--6">
+                      <p>
+                        <code>pll.png</code>
+                      </p>
+                      <img
+                        alt="Full predictive log likelihood"
+                        src={useBaseUrl('img/example_pystan_pll.svg')}
+                      />
+                    </div>
+                    <div className="col col--6">
+                      <p>
+                        <code>pll_half.png</code>
+                      </p>
+                      <img
+                        alt="Half predictive log likelihood"
+                        src={useBaseUrl('img/example_pystan_pll_half.svg')}
+                      />
+                    </div>
+                  </div>
+                </div>
               </li>
               <li>
-                <h3>3. Install PPLs to benchmark:</h3>
-                <a>
-                  Example #1,{' '}
-                  <a href="https://mc-stan.org/users/interfaces/pystan">Stan</a>
-                  :
-                </a>
-                <CodeBlock>{`pip install pystan`}</CodeBlock>
-                <a>
-                  Example #2,{' '}
-                  <a href="http://mcmc-jags.sourceforge.net/">Jags</a>:
-                </a>
-                <CodeBlock>{`pip install pyjags`}</CodeBlock>
+                <h3>4. Try PPL Bench with other configs</h3>
+                <p>
+                  The{' '}
+                  <a href="https://github.com/facebookresearch/pplbench/tree/master/examples">
+                    <code>examples</code> directory in our GitHub repo
+                  </a>{' '}
+                  provides a list of config files to show how PPL Bench could be
+                  used. Let's try{' '}
+                  <a href="https://github.com/facebookresearch/pplbench/blob/master/examples/logistic_regression.json">
+                    <code>examples/logistic_regression.json</code>
+                  </a>{' '}
+                  to see the performance across different PPLs:
+                </p>
+                <p>
+                  (You'll need to{' '}
+                  <a href={useBaseUrl('docs/working_with_ppls#jags')}>
+                    install Jags
+                  </a>{' '}
+                  first before running this config)
+                </p>
+                <CodeBlock>
+                  pplbench examples/logistic_regression.json
+                </CodeBlock>
+                <p>The plots shoule look like the followings:</p>
+                <div className="container">
+                  <div className="row">
+                    <div className="col col--6">
+                      <p>
+                        <code>pll.png</code>
+                      </p>
+                      <img
+                        alt="Full predictive log likelihood"
+                        src={useBaseUrl('img/example_blr_pll.svg')}
+                      />
+                    </div>
+                    <div className="col col--6">
+                      <p>
+                        <code>pll_half.png</code>
+                      </p>
+                      <img
+                        alt="Half predictive log likelihood"
+                        src={useBaseUrl('img/example_blr_pll_half.svg')}
+                      />
+                    </div>
+                  </div>
+                </div>
               </li>
               <li>
-                <h3>4. Run PPL Bench:</h3>
-                <a>
-                  Example for{' '}
-                  <a href="https://mc-stan.org/users/interfaces/pystan">Stan</a>{' '}
-                  and <a href="http://mcmc-jags.sourceforge.net/">Jags</a>:
-                </a>
-                <CodeBlock>{`python PPLBench.py -m robust_regression -l jags,stan -k 5 -n 2000 -s 500 --trials 2`}</CodeBlock>
+                <h3>To see the schema of the config file used by PPL Bench</h3>
+                <CodeBlock>pplbench -h</CodeBlock>
               </li>
               <li>
-                <h3>
-                  <i>Extra:</i> See PPL Bench's supported models, PPL
-                  implementations and commands:
-                </h3>
-                <CodeBlock>{`python PPLBench.py -h`}</CodeBlock>
+                <h3>To learn more about PPL Bench</h3>
+                <p>
+                  Reads our{' '}
+                  <a href={useBaseUrl('docs/introduction')}>Introduction</a>
+                </p>
               </li>
             </ol>
           </div>
