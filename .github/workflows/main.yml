@@ -118,10 +118,11 @@ jobs:
       id: version
       run: |
         VERSION_TAG="v$(python setup.py --version)"
-        if  [[ $(git tag -l $VERSION_TAG) ]]; then
-          echo "::set-output name=has_updated::true"
-        else
+        if  [[ $(git ls-remote --tags origin refs/tags/$VERSION_TAG) ]]; then
+          # there exists a tag with same name as current version
           echo "::set-output name=has_updated::false"
+        else
+          echo "::set-output name=has_updated::true"
         fi
         echo "::set-output name=version_tag::$(echo $VERSION_TAG)"
         echo "The current version of PPL Bench is $VERSION_TAG"
