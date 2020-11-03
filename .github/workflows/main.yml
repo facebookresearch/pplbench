@@ -98,7 +98,8 @@ jobs:
 
   check_version:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
+    # check the current repository so the pypi release workflow won't be run on forks
+    if: github.event_name == 'push' && github.repository == 'facebookresearch/pplbench'
     needs:
       - lint
       - test_example_json

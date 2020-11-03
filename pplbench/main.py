@@ -149,6 +149,8 @@ def configure_logging(config: SimpleNamespace, output_dir: str) -> None:
     :param config: benchmark configuration
     :output_dir: directory to save the output
     """
+    # set log level to INFO by default on root logger
+    logging.getLogger().setLevel("INFO")
     # setup logging for all other requested loglevels
     if hasattr(config, "loglevels"):
         for key, val in config.loglevels.__dict__.items():

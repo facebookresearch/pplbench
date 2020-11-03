@@ -1,26 +1,24 @@
 {
-    "model": {
-      "class": "logistic_regression.LogisticRegression",
-      "args": {"n": 2000, "k": 5, "rho": 3.0}
-    },
-    "num_samples": 500,
-    "trials": 2,
-    "ppls": [
-      {
-        "name": "stan",
-        "inference": {
-          "class": "inference.VI",
-          "infer_args": {"algorithm": "meanfield"}
-        },
-        "legend": {"color": "red", "name": "stan-VI-mean"}
+  "model": {
+    "class": "logistic_regression.LogisticRegression",
+    "args": {"n": 2000, "k": 5, "rho": 3.0}
+  },
+  "num_samples": 500,
+  "trials": 2,
+  "ppls": [
+    {
+      "name": "stan",
+      "inference": {
+        "class": "inference.VI",
+        "infer_args": {"algorithm": "meanfield"}
       },
-      {
-        "name": "stan",
-        "inference": {"class": "inference.MCMC"},
-        "legend": {"color": "blue"}
-      }
-    ],
-    "save_samples": true,
-    "loglevels": {"pystan": "INFO", "pplbench": "INFO"},
-    "figures": {"generate_pll": true, "suffix": "png"}
-  }
+      "legend": {"color": "red", "name": "stan-VI-mean"}
+    },
+    {
+      "name": "stan",
+      "inference": {"class": "inference.MCMC"},
+      "legend": {"color": "blue"}
+    }
+  ],
+  "save_samples": true
+}

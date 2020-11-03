@@ -47,6 +47,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 10px;
+  color: white !important;
 }
 
 .features {
@@ -75,7 +77,7 @@
 }
 
 .gettingStartedSection a {
-  color: inherit;
+  color: #4f57c3;
   text-decoration: inherit;
 }
 
