@@ -8,6 +8,17 @@ from .base_ppl_impl import BasePPLImplementation
 
 
 class BasePPLInference(ABC):
+    """
+    The base class of all PPL inference methods.
+
+    Attributes:
+        is_adaptive: A boolean indicates whether the inference method is adaptive or
+        not. The default value for is_adaptive is True. See infer() to see how this
+        attribute should be used.
+    """
+
+    is_adaptive = True
+
     @abstractmethod
     def __init__(
         self, impl_class: Type[BasePPLImplementation], model_attrs: Dict
@@ -26,9 +37,23 @@ class BasePPLInference(ABC):
 
     @abstractmethod
     def infer(
-        self, data: xr.Dataset, num_samples: int, seed: int, **infer_args
+        self,
+        data: xr.Dataset,
+        num_samples: int,
+        num_warmup: int,
+        seed: int,
+        **infer_args
     ) -> xr.Dataset:
-        """Run inference and return samples"""
+        """
+        Run inference and return samples. The number of samples returned by this method
+        should equal to num_samples. If is_adaptive is True for the class, PPL Bench
+        will assume that the samples with indicies [0, num_warmup) are warm up and
+        samples in [num_warmup, num_samples) will be used to compute diagnostic metrics.
+        Algorithms that do not use warm up samples should set is_adaptive to False when
+        extending this base class and could ignore num_warmup parameter when overriding
+        infer(). When is_adaptive is set to False, all samples in [0, num_samples) are
+        treated as valid samples and will be included in diagnostics.
+        """
         raise NotImplementedError
 
     def additional_diagnostics(self, output_dir: str, prefix: str) -> None:

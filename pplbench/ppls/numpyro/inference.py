@@ -30,6 +30,7 @@ class MCMC(BaseNumPyroInference):
         self,
         data: xr.Dataset,
         num_samples: int,
+        num_warmup: int,
         seed: int,
         algorithm: str = "NUTS",
         **infer_args,
@@ -41,10 +42,11 @@ class MCMC(BaseNumPyroInference):
             kernel = infer.NUTS(self.impl.model)
         else:
             raise ValueError(f"{algorithm} algorithm not registered for NumPyro.")
-        num_warmup = num_samples // 2
-        num_samples -= num_warmup
         mcmc = infer.MCMC(
-            kernel, num_warmup=num_warmup, num_samples=num_samples, **infer_args
+            kernel,
+            num_warmup=num_warmup,
+            num_samples=num_samples - num_warmup,
+            **infer_args,
         )
         # Note that we need to run warmup separately to collect samples
         # from the warmup phase.
