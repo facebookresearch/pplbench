@@ -35,6 +35,7 @@ SCHEMA = {
             "additionalProperties": False,
         },
         "num_samples": {"type": "integer", "minimum": 1},
+        "num_warmup": {"type": "integer", "minimum": 0},
         "trials": {"type": "integer", "minimum": 2},
         "ppls": {
             "type": "array",
@@ -46,6 +47,7 @@ SCHEMA = {
                         "type": "object",
                         "properties": {
                             "class": {"type": "string"},
+                            "num_warmup": {"type": "integer", "minimum": 0},
                             "compile_args": {
                                 "type": "object",
                                 "propertyNames": {
@@ -140,6 +142,11 @@ def read_config(args: Optional[List[str]]) -> SimpleNamespace:
     parser = ArgumentParser()
     parser.add_argument("config", action=ActionJsonSchema(schema=SCHEMA), help="%s")
     config = parser.parse_args(args).config
+
+    # default num_warmup to half of num_sample
+    if not hasattr(config, "num_warmup"):
+        config.num_warmup = config.num_samples // 2
+
     return config
 
 

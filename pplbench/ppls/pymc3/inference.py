@@ -1,6 +1,6 @@
 # Copyright(C) Facebook, Inc. and its affiliates. All Rights Reserved.
 
-from typing import Dict, Optional, Type, cast
+from typing import Dict, Type, cast
 
 import pymc3 as pm
 import xarray as xr
@@ -27,25 +27,24 @@ class MCMC(BasePyMC3Inference):
         self,
         data: xr.Dataset,
         num_samples: int,
+        num_warmup: int,
         seed: int,
-        tune: Optional[int] = None,
         algorithm: str = "NUTS",
         **infer_args
     ) -> xr.Dataset:
-        if tune is None:
-            tune = num_samples
 
         model = self.impl.get_model(data)
         with model:
             # Dynamically loading the step method from pymc3
             step_method = getattr(pm, algorithm)(model.vars, **infer_args)
             samples = pm.sample(
-                draws=num_samples,
-                tune=tune,
+                draws=num_samples - num_warmup,
+                tune=num_warmup,
                 step=step_method,
                 random_seed=seed,
                 chains=1,
                 return_inferencedata=False,
+                discard_tuned_samples=False,
                 progressbar=False,
             )
 
@@ -53,10 +52,13 @@ class MCMC(BasePyMC3Inference):
 
 
 class VI(BasePyMC3Inference):
+    is_adaptive = False
+
     def infer(
         self,
         data: xr.Dataset,
         num_samples: int,
+        num_warmup: int,
         seed: int,
         algorithm: str = "ADVI",
         **infer_args

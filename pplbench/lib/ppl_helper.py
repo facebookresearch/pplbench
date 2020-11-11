@@ -4,7 +4,7 @@ import logging
 import struct
 import time
 from types import SimpleNamespace
-from typing import Dict, List, NamedTuple, Tuple, Type
+from typing import Dict, List, NamedTuple, Optional, Tuple, Type
 
 import arviz
 import numpy as np
@@ -24,6 +24,7 @@ class PPLDetails(NamedTuple):
     color: Tuple[float, float, float]
     impl_class: Type[BasePPLImplementation]
     inference_class: Type[BasePPLInference]
+    num_warmup: Optional[int]
     compile_args: Dict
     infer_args: Dict
 
@@ -92,6 +93,7 @@ def find_ppl_details(config: SimpleNamespace) -> List[PPLDetails]:
                 color=color,
                 impl_class=impl_class,
                 inference_class=inference_class,
+                num_warmup=getattr(infer, "num_warmup", None),
                 compile_args=infer.compile_args.__dict__
                 if hasattr(infer, "compile_args")
                 else {},
@@ -141,6 +143,25 @@ def collect_samples_and_stats(
         infer_obj.compile(seed=rand.randint(1, 1e7), **pplobj.compile_args)
         compile_time = time.time() - compile_t1
         LOGGER.info(f"compiling on `{pplobj.name}` took {compile_time:.2f} secs")
+
+        if infer_obj.is_adaptive:
+            num_warmup = (
+                config.num_warmup if pplobj.num_warmup is None else pplobj.num_warmup
+            )
+            if num_warmup > config.num_samples:
+                raise ValueError(
+                    f"num_warmup ({num_warmup}) should be less than num_samples "
+                    f"({config.num_samples})"
+                )
+        else:
+            if pplobj.num_warmup:
+                raise ValueError(
+                    f"{pplobj.name} is not adaptive and does not accept a nonzero "
+                    "num_warmup as its parameter."
+                )
+            else:
+                num_warmup = 0
+
         # then run inference for each trial
         trial_samples, trial_pll, trial_timing = [], [], []
         for trialnum in range(config.trials):
@@ -148,20 +169,33 @@ def collect_samples_and_stats(
             samples = infer_obj.infer(
                 data=train_data,
                 num_samples=config.num_samples,
+                num_warmup=num_warmup,
                 seed=rand.randint(1, 1e7),
                 **pplobj.infer_args,
             )
             infer_time = time.time() - infer_t1
             LOGGER.info(f"inference trial {trialnum} took {infer_time:.2f} secs")
+
+            # Drop all NaN samples returned by PPL, which could happen when a PPL
+            # needs to fill in missing warmup samples (e.g. Jags)
+            valid_samples = samples.dropna("draw")
             # compute the pll per sample and then convert it to the actual pll over
             # cumulative samples
-            persample_pll = model_cls.evaluate_posterior_predictive(samples, test_data)
+            persample_pll = model_cls.evaluate_posterior_predictive(
+                valid_samples, test_data
+            )
             pll = np.logaddexp.accumulate(persample_pll) - np.log(
-                np.arange(config.num_samples) + 1
+                np.arange(valid_samples.sizes["draw"]) + 1
             )
             LOGGER.info(f"PLL = {str(pll)}")
             trial_samples.append(samples)
-            trial_pll.append(pll)
+
+            # After dropping the NaN samples, the length of PLL could be shorter than
+            # num_samples. So we'll need to pad the PLL list to make its length
+            # consistent across different PPLs
+            padded_pll = np.full(config.num_samples, np.nan)
+            padded_pll[valid_samples.draw.data] = pll
+            trial_pll.append(padded_pll)
             trial_timing.append([compile_time, infer_time])
             # finally, give the inference object an opportunity
             # to write additional diagnostics
@@ -171,8 +205,11 @@ def collect_samples_and_stats(
         trial_samples_data = xr.concat(
             trial_samples, pd.Index(data=np.arange(config.trials), name="chain")
         )
-        neff_data = arviz.ess(trial_samples_data)
-        rhat_data = arviz.rhat(trial_samples_data)
+        # exclude warm up samples when calculating diagonostics
+        trial_samples_no_warmup = trial_samples_data.isel(draw=slice(num_warmup, None))
+
+        neff_data = arviz.ess(trial_samples_no_warmup)
+        rhat_data = arviz.rhat(trial_samples_no_warmup)
         LOGGER.info(f"Trials completed for {pplobj.name}")
         LOGGER.info("== n_eff ===")
         LOGGER.info(str(neff_data.data_vars))
