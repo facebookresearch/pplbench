@@ -1,6 +1,7 @@
 # Copyright(C) Facebook, Inc. and its affiliates. All Rights Reserved.
-from typing import Dict, Optional, Type, cast
+from typing import Dict, Type, cast
 
+import numpy as np
 import pyjags
 import xarray as xr
 
@@ -27,8 +28,8 @@ class MCMC(BasePPLInference):
         self,
         data: xr.Dataset,
         num_samples: int,
+        num_warmup: int,
         seed: int,
-        adapt: Optional[int] = None,
         RNG_name: str = "base::Mersenne-Twister",
     ) -> xr.Dataset:
         """
@@ -42,18 +43,21 @@ class MCMC(BasePPLInference):
         :param RNG_name: the name of the random number generator
         :returns: samples dataset
         """
-        if adapt is None:
-            adapt = num_samples
 
         model = pyjags.Model(
             code=self.impl.get_code(),
             data=self.impl.format_data_to_jags(data),
             chains=1,
-            adapt=adapt,
+            adapt=num_warmup,
             init={".RNG.seed": seed, ".RNG.name": RNG_name},
         )
-        samples = model.sample(num_samples, vars=self.impl.get_vars())
+        samples = model.sample(num_samples - num_warmup, vars=self.impl.get_vars())
         # squeeze out the chain dimension from the samples
         for varname in samples.keys():
             samples[varname] = samples[varname].squeeze(-1)
-        return self.impl.extract_data_from_jags(samples)
+        samples = self.impl.extract_data_from_jags(samples)
+        # because jags does not return warm up samples, we need to shift the coordinates
+        # of the actual samples by num_warmup by padding with NaN
+        samples = samples.assign_coords(draw=samples.draw + num_warmup)
+        padding = xr.Dataset(coords={"draw": np.arange(num_warmup)})
+        return padding.merge(samples)

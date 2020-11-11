@@ -48,7 +48,7 @@
         "class": "inference.VI",
         "infer_args": {"algorithm": "FullRankADVI"}
       },
-      "legend": {"color": "darkseagreen", "name": "pymc3-full"}
+      "legend": {"color": "darkseagreen", "name": "pymc3-VI-full"}
     },
     {
       "name": "numpyro",

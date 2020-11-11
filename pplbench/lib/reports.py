@@ -46,6 +46,14 @@ def generate_plots(
         "pll_quarter",
     )
 
+    generate_pll_plot(
+        config,
+        output_dir,
+        all_ppl_details,
+        all_other_metrics_data.pll.isel(draw=slice(config.num_warmup, None)),
+        "pll_post_warmup",
+    )
+
 
 def generate_pll_plot(
     config: SimpleNamespace,
@@ -59,24 +67,23 @@ def generate_pll_plot(
         if hasattr(config, "figures") and hasattr(config.figures, "suffix")
         else "png"
     )
-    min_pll = pll.min("chain")
-    max_pll = pll.max("chain")
-    mean_pll = pll.mean("chain")
     plt.figure(figsize=(8, 6))
     plt.rcParams.update({"font.size": 18})
 
     legend = []
     for ppl_details in all_ppl_details:
+        valid_pll = pll.sel(ppl=ppl_details.name).dropna("draw")
+
         (line,) = plt.plot(
-            pll.coords["draw"],
-            mean_pll.sel(ppl=ppl_details.name),
+            valid_pll.coords["draw"],
+            valid_pll.mean("chain"),
             color=ppl_details.color,
             label=ppl_details.name,
         )
         plt.fill_between(
-            pll.coords["draw"],
-            min_pll.sel(ppl=ppl_details.name),
-            max_pll.sel(ppl=ppl_details.name),
+            valid_pll.coords["draw"],
+            valid_pll.min("chain"),
+            valid_pll.max("chain"),
             color=ppl_details.color,
             interpolate=True,
             alpha=0.3,
