@@ -6,7 +6,7 @@
       "k": 10
     }
   },
-  "num_samples": 1500,
+  "iterations": 1500,
   "trials": 3,
   "ppls": [
     {

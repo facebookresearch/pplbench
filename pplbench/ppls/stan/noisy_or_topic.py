@@ -37,8 +37,8 @@ class NoisyOrTopic(BaseStanImplementation):
         :returns: a dataset over inferred parameters
         """
         # dim 1 is the chains dimension so we squeeze it out
-        active = samples["active"].squeeze(1)  # shape: [num_samples, num_topics, 2]
-        active = np.argmax(active, axis=2) == 0  # shape: [num_samples, num_topics]
+        active = samples["active"].squeeze(1)  # shape: [iterations, num_topics, 2]
+        active = np.argmax(active, axis=2) == 0  # shape: [iterations, num_topics]
         return xr.Dataset(
             {"active": (["draw", "topic"], active.astype(int))},
             coords={

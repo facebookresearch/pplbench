@@ -3,7 +3,7 @@
     "class": "logistic_regression.LogisticRegression",
     "args": {"n": 2000, "k": 10, "rho": 3.0}
   },
-  "num_samples": 1500,
+  "iterations": 1500,
   "trials": 3,
   "ppls": [
     {

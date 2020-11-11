@@ -20,7 +20,7 @@ def _compute_var(query_samples: Tensor) -> Tuple[Tensor, Tensor]:
 def split_r_hat(query_samples: Tensor) -> Optional[Tensor]:
     """
     Computes r_hat given query_samples
-    :param query_samples: samples of shape (num_chains, num_samples) from the posterior.
+    :param query_samples: samples of shape (num_chains, iterations) from the posterior.
     """
     n_chains, n_samples = query_samples.shape[:2]
     if n_chains < 2:
@@ -35,7 +35,7 @@ def split_r_hat(query_samples: Tensor) -> Optional[Tensor]:
 def effective_sample_size(query_samples: Tensor) -> Tensor:
     """
     Computes effective sample size given query_samples
-    :param query_samples: samples of shape (num_chains, num_samples) from the posterior
+    :param query_samples: samples of shape (num_chains, iterations) from the posterior
     """
     n_chains, n_samples, *query_dim = query_samples.shape
 

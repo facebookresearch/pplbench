@@ -31,7 +31,7 @@ class MCMC(BaseStanInference):
     def infer(
         self,
         data: xr.Dataset,
-        num_samples: int,
+        iterations: int,
         num_warmup: int,
         seed: int,
         algorithm: str = "NUTS",
@@ -44,7 +44,7 @@ class MCMC(BaseStanInference):
         self.fit = self.stan_model.sampling(
             data=self.impl.format_data_to_stan(data),
             pars=self.impl.get_pars(),
-            iter=num_samples,
+            iter=iterations,
             warmup=num_warmup,
             chains=1,
             check_hmc_diagnostics=False,
@@ -64,7 +64,7 @@ class VI(BaseStanInference):
     def infer(  # type: ignore
         self,
         data: xr.Dataset,
-        num_samples: int,
+        iterations: int,
         num_warmup: int,
         seed: int,
         algorithm: str = "meanfield",
@@ -75,7 +75,7 @@ class VI(BaseStanInference):
         self.results = self.stan_model.vb(
             data=self.impl.format_data_to_stan(data),
             pars=self.impl.get_pars(),
-            output_samples=num_samples,
+            output_samples=iterations,
             seed=seed,
             algorithm=algorithm,
         )

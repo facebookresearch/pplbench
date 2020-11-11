@@ -39,19 +39,19 @@ class BasePPLInference(ABC):
     def infer(
         self,
         data: xr.Dataset,
-        num_samples: int,
+        iterations: int,
         num_warmup: int,
         seed: int,
         **infer_args
     ) -> xr.Dataset:
         """
         Run inference and return samples. The number of samples returned by this method
-        should equal to num_samples. If is_adaptive is True for the class, PPL Bench
+        should equal to iterations. If is_adaptive is True for the class, PPL Bench
         will assume that the samples with indicies [0, num_warmup) are warm up and
-        samples in [num_warmup, num_samples) will be used to compute diagnostic metrics.
+        samples in [num_warmup, iterations) will be used to compute diagnostic metrics.
         Algorithms that do not use warm up samples should set is_adaptive to False when
         extending this base class and could ignore num_warmup parameter when overriding
-        infer(). When is_adaptive is set to False, all samples in [0, num_samples) are
+        infer(). When is_adaptive is set to False, all samples in [0, iterations) are
         treated as valid samples and will be included in diagnostics.
         """
         raise NotImplementedError
