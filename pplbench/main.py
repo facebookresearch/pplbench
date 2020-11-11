@@ -34,7 +34,7 @@ SCHEMA = {
             "required": ["class"],
             "additionalProperties": False,
         },
-        "num_samples": {"type": "integer", "minimum": 1},
+        "iterations": {"type": "integer", "minimum": 1},
         "num_warmup": {"type": "integer", "minimum": 0},
         "trials": {"type": "integer", "minimum": 2},
         "ppls": {
@@ -99,7 +99,7 @@ SCHEMA = {
             "additionalProperties": False,
         },
     },
-    "required": ["model", "ppls", "num_samples", "trials"],
+    "required": ["model", "ppls", "iterations", "trials"],
     "additionalProperties": False,
 }
 
@@ -145,7 +145,7 @@ def read_config(args: Optional[List[str]]) -> SimpleNamespace:
 
     # default num_warmup to half of num_sample
     if not hasattr(config, "num_warmup"):
-        config.num_warmup = config.num_samples // 2
+        config.num_warmup = config.iterations // 2
 
     return config
 

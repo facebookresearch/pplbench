@@ -26,7 +26,7 @@ class MCMC(BasePyMC3Inference):
     def infer(
         self,
         data: xr.Dataset,
-        num_samples: int,
+        iterations: int,
         num_warmup: int,
         seed: int,
         algorithm: str = "NUTS",
@@ -38,7 +38,7 @@ class MCMC(BasePyMC3Inference):
             # Dynamically loading the step method from pymc3
             step_method = getattr(pm, algorithm)(model.vars, **infer_args)
             samples = pm.sample(
-                draws=num_samples - num_warmup,
+                draws=iterations - num_warmup,
                 tune=num_warmup,
                 step=step_method,
                 random_seed=seed,
@@ -57,7 +57,7 @@ class VI(BasePyMC3Inference):
     def infer(
         self,
         data: xr.Dataset,
-        num_samples: int,
+        iterations: int,
         num_warmup: int,
         seed: int,
         algorithm: str = "ADVI",
@@ -68,6 +68,6 @@ class VI(BasePyMC3Inference):
         with model:
             method = getattr(pm, algorithm)(**infer_args)
             approx = method.fit(progressbar=False)
-            samples = approx.sample(draws=num_samples)
+            samples = approx.sample(draws=iterations)
 
         return self.impl.extract_data_from_pymc3(samples)

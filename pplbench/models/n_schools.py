@@ -183,10 +183,10 @@ class NSchools(BaseModel):
                 :, test.attrs["state_idx"], test.attrs["district_idx"]
             ]
             + samples.beta_type.values[:, test.attrs["type_idx"]]
-        )  # size = (num_samples, n_test)
+        )  # size = (iterations, n_test)
         loglike = norm.logpdf(
             test.Y.values[np.newaxis, :],
             loc=y_hat,
             scale=test.sigma.values[np.newaxis, :],
-        )  # size = (num_samples, n_test)
-        return loglike.sum(axis=1)  # size = (num_samples,)
+        )  # size = (iterations, n_test)
+        return loglike.sum(axis=1)  # size = (iterations,)

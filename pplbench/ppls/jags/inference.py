@@ -27,7 +27,7 @@ class MCMC(BasePPLInference):
     def infer(  # type: ignore
         self,
         data: xr.Dataset,
-        num_samples: int,
+        iterations: int,
         num_warmup: int,
         seed: int,
         RNG_name: str = "base::Mersenne-Twister",
@@ -37,7 +37,7 @@ class MCMC(BasePPLInference):
         for JAGS documentation.
 
         :param data: PPLBench dataset
-        :param num_samples: number of samples to create
+        :param iterations: number of samples to create
         :param seed: seed for random number generator
         :param adapt: the number of adaptive steps
         :param RNG_name: the name of the random number generator
@@ -51,7 +51,7 @@ class MCMC(BasePPLInference):
             adapt=num_warmup,
             init={".RNG.seed": seed, ".RNG.name": RNG_name},
         )
-        samples = model.sample(num_samples - num_warmup, vars=self.impl.get_vars())
+        samples = model.sample(iterations - num_warmup, vars=self.impl.get_vars())
         # squeeze out the chain dimension from the samples
         for varname in samples.keys():
             samples[varname] = samples[varname].squeeze(-1)

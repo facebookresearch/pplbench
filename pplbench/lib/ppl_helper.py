@@ -148,10 +148,10 @@ def collect_samples_and_stats(
             num_warmup = (
                 config.num_warmup if pplobj.num_warmup is None else pplobj.num_warmup
             )
-            if num_warmup > config.num_samples:
+            if num_warmup > config.iterations:
                 raise ValueError(
-                    f"num_warmup ({num_warmup}) should be less than num_samples "
-                    f"({config.num_samples})"
+                    f"num_warmup ({num_warmup}) should be less than iterations "
+                    f"({config.iterations})"
                 )
         else:
             if pplobj.num_warmup:
@@ -168,7 +168,7 @@ def collect_samples_and_stats(
             infer_t1 = time.time()
             samples = infer_obj.infer(
                 data=train_data,
-                num_samples=config.num_samples,
+                iterations=config.iterations,
                 num_warmup=num_warmup,
                 seed=rand.randint(1, 1e7),
                 **pplobj.infer_args,
@@ -179,6 +179,12 @@ def collect_samples_and_stats(
             # Drop all NaN samples returned by PPL, which could happen when a PPL
             # needs to fill in missing warmup samples (e.g. Jags)
             valid_samples = samples.dropna("draw")
+            if samples.sizes["draw"] != config.iterations:
+                raise RuntimeError(
+                    f"Expected {config.iterations} samples, but {samples.sizes['draw']}"
+                    f" samples are returned by {pplobj.name}"
+                )
+
             # compute the pll per sample and then convert it to the actual pll over
             # cumulative samples
             persample_pll = model_cls.evaluate_posterior_predictive(
@@ -191,9 +197,9 @@ def collect_samples_and_stats(
             trial_samples.append(samples)
 
             # After dropping the NaN samples, the length of PLL could be shorter than
-            # num_samples. So we'll need to pad the PLL list to make its length
+            # iterations. So we'll need to pad the PLL list to make its length
             # consistent across different PPLs
-            padded_pll = np.full(config.num_samples, np.nan)
+            padded_pll = np.full(config.iterations, np.nan)
             padded_pll[valid_samples.draw.data] = pll
             trial_pll.append(padded_pll)
             trial_timing.append([compile_time, infer_time])
@@ -255,7 +261,7 @@ def collect_samples_and_stats(
             "ppl": np.array(all_names),
             "chain": np.arange(config.trials),
             "phase": np.array(["compile", "infer"]),
-            "draw": np.arange(config.num_samples),
+            "draw": np.arange(config.iterations),
             "percentile": np.array(["min", "median", "max"]),
         },
     )

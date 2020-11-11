@@ -161,14 +161,14 @@ class NoisyOrTopic(BaseModel):
         test = test.transpose("sentence", "word")
         edge_weight = test.edge_weight  # size=(1+num_topics+num_words, 1+num_topics)
         S = test.S[0]  # size=num_words
-        active = samples.active.values  # size = (num_samples, 1+num_topics)
+        active = samples.active.values  # size = (iterations, 1+num_topics)
         if not (active[:, 0] == 1).all():
             raise RuntimeError("leak node should always be active in posterior samples")
         # we will compute the sum of the incoming weight of each word to compute the
         # log likelihood of the data
         wordidx = 1 + test.num_topics + np.arange(test.num_words)
-        weight = active @ edge_weight[wordidx].T  # size = (num_samples, num_words)
+        weight = active @ edge_weight[wordidx].T  # size = (iterations, num_words)
         loglike = np.where(
             S, log1mexpm(weight), -weight
-        )  # size = (num_samples, num_words)
-        return loglike.sum(axis=1)  # size = (num_samples,)
+        )  # size = (iterations, num_words)
+        return loglike.sum(axis=1)  # size = (iterations,)

@@ -29,7 +29,7 @@ class MCMC(BaseNumPyroInference):
     def infer(
         self,
         data: xr.Dataset,
-        num_samples: int,
+        iterations: int,
         num_warmup: int,
         seed: int,
         algorithm: str = "NUTS",
@@ -45,7 +45,7 @@ class MCMC(BaseNumPyroInference):
         mcmc = infer.MCMC(
             kernel,
             num_warmup=num_warmup,
-            num_samples=num_samples - num_warmup,
+            num_samples=iterations - num_warmup,
             **infer_args,
         )
         # Note that we need to run warmup separately to collect samples

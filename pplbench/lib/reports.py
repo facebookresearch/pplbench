@@ -23,26 +23,26 @@ def generate_plots(
     generate_pll_plot(
         config, output_dir, all_ppl_details, all_other_metrics_data.pll, "pll"
     )
-    num_samples = len(all_other_metrics_data.pll.coords["draw"])
+    iterations = len(all_other_metrics_data.pll.coords["draw"])
     generate_pll_plot(
         config,
         output_dir,
         all_ppl_details,
-        all_other_metrics_data.pll.isel(draw=slice(num_samples // 4, None)),
+        all_other_metrics_data.pll.isel(draw=slice(iterations // 4, None)),
         "pll_three_quarter",
     )
     generate_pll_plot(
         config,
         output_dir,
         all_ppl_details,
-        all_other_metrics_data.pll.isel(draw=slice(num_samples // 2, None)),
+        all_other_metrics_data.pll.isel(draw=slice(iterations // 2, None)),
         "pll_half",
     )
     generate_pll_plot(
         config,
         output_dir,
         all_ppl_details,
-        all_other_metrics_data.pll.isel(draw=slice(3 * num_samples // 4, None)),
+        all_other_metrics_data.pll.isel(draw=slice(3 * iterations // 4, None)),
         "pll_quarter",
     )
 
