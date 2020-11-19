@@ -12,8 +12,8 @@ const rehypeKatex = require('rehype-katex');
 module.exports = {
   title: 'PPL Bench',
   tagline: 'Evaluation Framework for Probabilistic Programming Languages',
-  url: 'https://facebookresearch.github.io',
-  baseUrl: '/pplbench/',
+  url: 'https://pplbench.org',
+  baseUrl: '/',
   onBrokenLinks: 'throw',
   favicon: 'img/favicon.ico',
   projectName: 'pplbench',
