@@ -160,7 +160,8 @@ class CrowdSourcedAnnotation(BaseModel):
         confusion_matrix = samples.confusion_matrix.values
         labels = test.labels.values
         labelers = test.labelers.values
-        # size of confusion_matrix[:, labelers, :, labels]: [n/2, num_categories, iterations, num_categories]
+        # size of confusion_matrix[:, labelers, :, labels]
+        # is [n/2, num_categories, iterations, num_categories]
         likelihood = logsumexp(
             np.log(confusion_matrix[:, labelers, :, labels]).sum(axis=1) + np.log(prev),
             axis=2,
