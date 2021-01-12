@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[6],{64:function(p){p.exports=JSON.parse('{"allTagsPath":"/blog/tags","slug":"pplbench","name":"pplbench","count":1,"permalink":"/blog/tags/pplbench"}')}}]);
