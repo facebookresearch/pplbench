@@ -72,7 +72,7 @@ jobs:
       - find_example_json
     strategy:
       matrix:
-        python-version: [3.6, 3.7]
+        python-version: [3.7]
         test-file: ${{ fromJson(needs.find_example_json.outputs.files) }}
     steps:
     - name: Checkout

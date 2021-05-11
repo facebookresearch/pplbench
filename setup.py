@@ -8,11 +8,11 @@ from setuptools import find_packages, setup
 
 
 REQUIRED_MAJOR = 3
-REQUIRED_MINOR = 6
+REQUIRED_MINOR = 7
 
 PPLS_REQUIRE = [
-    "pystan>=2.19.1.1",
-    "pymc3>=3.9.0",
+    "pystan==2.19.1.1",
+    "pymc3>=3.11.0",
     "pyro-ppl>=0.4.1",
     "numpyro>=0.3.0",
 ]
@@ -71,7 +71,7 @@ setup(
     ],
     long_description=long_description,
     long_description_content_type="text/markdown",
-    python_requires=">=3.6",
+    python_requires=">=3.7",
     install_requires=[
         "jsonargparse>=2.32.2",
         "jsonschema>=3.2.0",
@@ -80,7 +80,7 @@ setup(
         "pandas>=1.0.1",
         "matplotlib>=3.1.3",
         "xarray>=0.16.0",
-        "arviz>=0.9.0",
+        "arviz>=0.11.0",
     ],
     packages=find_packages(),
     extras_require={"dev": DEV_REQUIRE, "ppls": PPLS_REQUIRE},
