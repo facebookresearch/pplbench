@@ -61,7 +61,7 @@ class LogisticRegression(BaseModel):
         k: int = 10,
         alpha_scale: float = 10,
         beta_scale: float = 2.5,
-        beta_loc: float = 0,
+        beta_loc: float = 0.0,
         rho: float = 3,
         train_frac: float = 0.5,
     ) -> Tuple[xr.Dataset, xr.Dataset]:
