@@ -16,7 +16,7 @@ PPLS_REQUIRE = [
     "pyro-ppl>=0.4.1",
     "numpyro>=0.3.0",
 ]
-DEV_REQUIRE = PPLS_REQUIRE + ["black==20.8b1", "isort", "flake8", "mypy"]
+DEV_REQUIRE = PPLS_REQUIRE + ["black==20.8b1", "flake8", "mypy", "usort"]
 
 
 # Check for python version

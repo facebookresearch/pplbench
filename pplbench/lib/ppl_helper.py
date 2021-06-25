@@ -140,7 +140,7 @@ def collect_samples_and_stats(
         # compile step 1: instantiate ppl inference object
         infer_obj = pplobj.inference_class(pplobj.impl_class, train_data.attrs)
         # compile step 2: call compile
-        infer_obj.compile(seed=rand.randint(1, 1e7), **pplobj.compile_args)
+        infer_obj.compile(seed=rand.randint(1, int(1e7)), **pplobj.compile_args)
         compile_time = time.time() - compile_t1
         LOGGER.info(f"compiling on `{pplobj.name}` took {compile_time:.2f} secs")
 
@@ -170,7 +170,7 @@ def collect_samples_and_stats(
                 data=train_data,
                 iterations=config.iterations,
                 num_warmup=num_warmup,
-                seed=rand.randint(1, 1e7),
+                seed=rand.randint(1, int(1e7)),
                 **pplobj.infer_args,
             )
             infer_time = time.time() - infer_t1
