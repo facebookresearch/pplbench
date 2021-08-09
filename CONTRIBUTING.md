@@ -4,19 +4,27 @@ We welcome any contributions - whether it is adding a new model, adding a new PP
 
 ### How to add a new PPL?
 
-To add a new PPL, first, create a new directory in `pplbench/ppl`. Then, create a base implementation that future implementations of the PPL can use. You can refer to `pplbench/ppls/stan/base_stan_impl.py` as an example.
+To add a new PPL, first, create a new directory in `pplbench/ppls`. Then, create implementations of `BasePPLInference` specific to the added PPL and chosen inference algorithms available for that system. For example, `pplbench/ppls/stan/inference.py` implements `BaseStanInference` which serves as a basis for two inference algorithms offered by the Stan system: `MCMC` and `VI`.
 
-This base PPL implementation must inherit from `BasePPLImplementation`.
-
+These inference classes must be able to solve a model implementation object provided to them as an argument. This object must be of a type derived from `BasePPLImplementation`. In the Stan example, the class `BaseStanImplementation` (in `pplbench/ppls/stan/base_stan_impl.py`) provides a Stan-specific interface for  information about Stan models for the inference algorithms to use, and specific model classes are sub-classes of `BaseStanImplementation` (for example, `RobustRegression` in `pplbench/ppls/stan/robust_regression.py`).
 
 ### How to add a new model?
 
-To add a new model, create a new file in `pplbench/models`. The model will need to inherit from `BaseModel` and implement two methods — `generate_data` and `evaluate_posterior_predictive`.
+To add a new model, you need to write code to generate and test data according to this new model (this data will be shared by all PPLs for evaluation), as well as code for encoding and running inference for this new model for each PPL that will be applied to it.
+
+#### Generating and testing data for a New Model
+
+To write the code to generate and test the data for the model, create a new file in `pplbench/models`. The model will need to inherit from `BaseModel` and implement two methods — `generate_data` and `evaluate_posterior_predictive`.
 
 `generate_data` should return the train and test data by simulating from the generative model.
 
 `evaluate_posterior_predictive` should return the predictive log likelihood of the data given samples from the inferred parameters.
 
+#### Encoding the model in a particular PPL
+
+To encode a new model with a PPL, you need to add a sub-class of `BasePPLImplementation` corresponding to it. One example is the aforementioned `RobustRegression` in `pplbench/ppls/stan/robust_regression.py`, but you can define your own new models by writing classes like that.
+
+Note that, for convenience, a `BaseStanImplementation` class was derived from `BasePPLImplementation` and defines a shared interface for all Stan model implementations. A similar pattern applies to the other PPLs. Therefore you will very likely want to reuse such base classes for convenience when defining new models for these systems, or define such an analogous base class when introducing a completely new PPL.
 
 ## Pull Requests
 We welcome your pull requests.

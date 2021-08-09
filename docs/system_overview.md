@@ -20,4 +20,4 @@ PPL Bench automatically generates predictive log likelihood plots (plotted again
 
 We support multiple trials, which runs inference on the same training data, multiple times. Our plots use multiple trials to generate confidence bands in our predictive log likelihood plots.
 
-We also show other important statistics such as effective sample size, inference time, and r_hat.
+We also show other important statistics such as effective sample size, inference time, and $\hat{R}$.
