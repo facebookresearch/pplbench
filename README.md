@@ -42,7 +42,7 @@ Let's dive right in with a benchmark run of Bayesian Logistic Regression. To run
 PyStan (if you haven't already):
 
 ```
-pip install pystan
+pip install pystan==2.19.1.1
 ```
 
 Then, run PPL Bench with example config:

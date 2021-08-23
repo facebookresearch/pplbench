@@ -128,7 +128,7 @@ const QuickStart = () => (
               <li>
                 <h3>To learn more about PPL Bench</h3>
                 <p>
-                  Reads our{' '}
+                  Read our{' '}
                   <a href={useBaseUrl('docs/introduction')}>Introduction</a>
                 </p>
               </li>

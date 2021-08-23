@@ -7,7 +7,7 @@ For the PPL Bench to benchmark a probabilistic programming language, you need to
 ## Stan
 
 ```
-pip install pystan
+pip install pystan==2.19.1.1
 ```
 
 ## Jags
