@@ -34,7 +34,7 @@ const QuickStart = () => (
                 <h3>2. Write a simple JSON config</h3>
                 <p>
                   Let's store the following config into a file called{' '}
-                  <a href="https://github.com/facebookresearch/pplbench/blob/master/examples/example.json">
+                  <a href="https://github.com/facebookresearch/pplbench/blob/main/examples/example.json">
                     <code>example.json</code>
                   </a>
                   .
@@ -77,12 +77,12 @@ const QuickStart = () => (
                 <h3>4. Try PPL Bench with other configs</h3>
                 <p>
                   The{' '}
-                  <a href="https://github.com/facebookresearch/pplbench/tree/master/examples">
+                  <a href="https://github.com/facebookresearch/pplbench/tree/main/examples">
                     <code>examples</code> directory in our GitHub repo
                   </a>{' '}
                   provides a list of config files to show how PPL Bench could be
                   used. Let's try{' '}
-                  <a href="https://github.com/facebookresearch/pplbench/blob/master/examples/logistic_regression.json">
+                  <a href="https://github.com/facebookresearch/pplbench/blob/main/examples/logistic_regression.json">
                     <code>examples/logistic_regression.json</code>
                   </a>{' '}
                   to see the performance across different PPLs:

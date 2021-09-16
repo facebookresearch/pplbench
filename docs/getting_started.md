@@ -47,7 +47,7 @@ This is what the Predictive Log Likelihood (PLL) plot should look like:
 ![PLL plot of example run](../website/static/img/example_pystan_pll.svg)
 ![PLL half plot of example run](../website/static/img/example_pystan_pll_half.svg)
 
-Please see the [examples/example.json](https://github.com/facebookresearch/pplbench/blob/master/examples/example.json) file to understand the schema for specifying benchmark runs. The schema is documented in [pplbench/main.py](https://github.com/facebookresearch/pplbench/blob/master/pplbench/main.py) and can be printed by running the help command:
+Please see the [examples/example.json](https://github.com/facebookresearch/pplbench/blob/main/examples/example.json) file to understand the schema for specifying benchmark runs. The schema is documented in [pplbench/main.py](https://github.com/facebookresearch/pplbench/blob/main/pplbench/main.py) and can be printed by running the help command:
 
 ```
 pplbench -h
@@ -64,7 +64,7 @@ For an in-depth reference of the various PPL Bench internals, see our [API Refer
 
 ## Contributing
 
-You'd like to contribute to PPL Bench? Great! Please see [here](https://github.com/facebookresearch/pplbench/blob/master/CONTRIBUTING.md) for how to help out.
+You'd like to contribute to PPL Bench? Great! Please see [here](https://github.com/facebookresearch/pplbench/blob/main/CONTRIBUTING.md) for how to help out.
 
 
 ## Join the PPL Bench community
