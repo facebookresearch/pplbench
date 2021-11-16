@@ -73,7 +73,7 @@ setup(
     long_description_content_type="text/markdown",
     python_requires=">=3.7",
     install_requires=[
-        "jsonargparse>=2.32.2",
+        "jsonargparse>=4.0.0",
         "jsonschema>=3.2.0",
         "numpy>=1.18.5",
         "scipy>=1.5.0",
