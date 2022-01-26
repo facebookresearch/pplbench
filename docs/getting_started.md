@@ -4,7 +4,7 @@ title: Getting Started
 ---
 This document outlines how to get started with PPL Bench.
 
-Before jumping into the project, we recommend you read ["Why Bean Machine?"](why_bean_machine.md) and [System Overview](system_overview.md) documents.
+Before jumping into the project, we recommend you read [Introduction](introduction.md) and [System Overview](system_overview.md) documents.
 
 ## Installation
 
