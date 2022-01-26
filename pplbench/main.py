@@ -8,8 +8,9 @@ import os
 import sys
 from types import SimpleNamespace
 from typing import List, Optional
+from unittest import mock
 
-from jsonargparse import ActionJsonSchema, ArgumentParser
+from jsonargparse import ActionJsonSchema, ArgumentParser, dict_to_namespace
 
 from .lib import model_helper, ppl_helper, reports, utils
 
@@ -146,6 +147,8 @@ def read_config(args: Optional[List[str]]) -> SimpleNamespace:
     parser = ArgumentParser()
     parser.add_argument("config", action=ActionJsonSchema(schema=SCHEMA), help="%s")
     config = parser.parse_args(args).config
+    with mock.patch("jsonargparse.namespace.Namespace", SimpleNamespace):
+        config = dict_to_namespace(config)
 
     # default num_warmup to half of num_sample
     if not hasattr(config, "num_warmup"):

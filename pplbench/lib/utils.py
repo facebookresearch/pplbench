@@ -11,7 +11,6 @@ import os
 import pydoc
 import sys
 import time
-from argparse import Namespace
 from types import SimpleNamespace
 from typing import Any
 
@@ -40,7 +39,7 @@ class SimpleNamespaceEncoder(json.JSONEncoder):
     """define class for encoding config object"""
 
     def default(self, object):
-        if isinstance(object, SimpleNamespace) or isinstance(object, Namespace):
+        if isinstance(object, SimpleNamespace):
             return object.__dict__
         elif isinstance(object, jsonargparse.Path):
             return {}
