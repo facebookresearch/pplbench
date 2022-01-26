@@ -4,7 +4,7 @@
 # LICENSE file in the root directory of this source tree.
 
 from collections import OrderedDict
-from typing import Dict, Type, cast
+from typing import cast, Dict, Type
 
 import numpy as np
 import xarray as xr
