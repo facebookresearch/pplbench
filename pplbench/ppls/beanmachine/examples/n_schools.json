@@ -1,0 +1,45 @@
+{
+  "model": {
+    "class": "n_schools.NSchools",
+    "args": {"n": 20000, "num_states": 20, "num_districts_per_state": 10}
+  },
+  "iterations": 1500,
+  "trials": 2,
+  "ppls": [
+    {
+      "name": "beanmachine",
+      "inference": {
+        "class": "inference.MCMC",
+        "infer_args": {
+          "algorithm": "GlobalNoUTurnSampler"
+        }
+      },
+      "legend": {"color": "red", "name": "bm-NUTS"}
+    },
+    {
+      "name": "beanmachine.graph",
+      "inference": {
+        "class": "inference.NMC"
+      },
+      "legend": {"color": "green", "name": "bmgraph-NMC"}
+    },
+    {
+      "name": "beanmachine.graph",
+      "inference": {
+        "class": "inference.GlobalMCMC"
+      },
+      "legend": {"color": "purple", "name": "bmgraph-NUTS"}
+    },
+    {
+      "name": "stan",
+      "inference": {
+        "class": "inference.MCMC",
+        "infer_args": {"algorithm": "NUTS"}
+      },
+      "legend": {"color": "blue", "name": "stan-NUTS"}
+    }
+  ],
+  "save_samples": true,
+  "loglevels": {"pystan": "INFO", "pplbench": "INFO"},
+  "figures": {"generate_pll": true, "suffix": "png"}
+}
