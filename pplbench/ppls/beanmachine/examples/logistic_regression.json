@@ -1,0 +1,36 @@
+{
+  "model": {
+    "class": "logistic_regression.LogisticRegression",
+    "args": {"n": 2000, "k": 10, "rho": 3.0}
+  },
+  "iterations": 1500,
+  "trials": 2,
+  "ppls": [
+    {
+      "name": "beanmachine",
+      "inference": {
+        "class": "inference.MCMC",
+        "infer_args": {
+          "algorithm": "GlobalNoUTurnSampler"
+        }
+      },
+      "legend": {"color": "purple", "name": "bm-nuts"}
+    },
+    {
+      "name": "stan",
+      "inference": {
+        "class": "inference.MCMC",
+        "infer_args": {
+          "algorithm": "NUTS"
+        }
+      },
+      "legend": {
+        "color": "red",
+        "name": "stan-nuts"
+      }
+    }
+  ],
+  "save_samples": true,
+  "loglevels": {"beanmachine": "INFO", "pystan": "INFO", "pplbench": "INFO"},
+  "figures": {"generate_pll": true, "suffix": "png"}
+}
