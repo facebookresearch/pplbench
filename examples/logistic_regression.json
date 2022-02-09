@@ -57,6 +57,16 @@
         "infer_args": {"algorithm": "NUTS"}
       },
       "legend": {"color": "orange", "name": "numpyro"}
+    },
+    {
+      "name": "beanmachine",
+      "inference": {
+        "class": "inference.MCMC",
+        "infer_args": {
+          "algorithm": "GlobalNoUTurnSampler"
+        }
+      },
+      "legend": {"color": "purple", "name": "bm-nuts"}
     }
   ],
   "save_samples": true,

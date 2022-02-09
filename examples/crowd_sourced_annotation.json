@@ -1,7 +1,14 @@
 {
   "model": {
     "class": "crowd_sourced_annotation.CrowdSourcedAnnotation",
-    "args": {"n": 1000, "k": 10, "num_categories": 3, "expected_correctness": 0.8, "num_labels_per_item": 3, "concentration": 10}
+    "args": {
+      "n": 1000,
+      "k": 10,
+      "num_categories": 2,
+      "expected_correctness": 0.8,
+      "num_labels_per_item": 3,
+      "concentration": 10
+    }
   },
   "iterations": 1000,
   "trials": 3,
@@ -18,6 +25,13 @@
         "infer_args": {"algorithm": "meanfield"}
       },
       "legend": {"color": "red", "name": "stan-VI-mean"}
+    },
+    {
+      "name": "beanmachine.graph",
+      "inference": {
+        "class": "inference.NMC"
+      },
+      "legend": {"color": "green", "name": "bmgraph-NMC"}
     }
   ],
   "save_samples": true,

@@ -3,6 +3,8 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
+from typing import List
+
 import beanmachine.graph as bmg
 import numpy as np
 import xarray as xr
@@ -18,8 +20,8 @@ class LogisticRegression(BaseBMGraphImplementation):
         """
         self.attrs = attrs
         self._graph = bmg.Graph()
-        self.x_samples = []
-        self.y_samples = []
+        self.x_samples: List[List[int]] = []
+        self.y_samples: List[int] = []
         self._initialize_graph()
 
     def _initialize_graph(self):

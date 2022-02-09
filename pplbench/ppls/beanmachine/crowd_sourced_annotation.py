@@ -52,14 +52,16 @@ class CrowdSourcedAnnotation(BaseBeanMachineImplementation):
     @bm.random_variable
     def confusion_matrix(self, j: int, c: int) -> dist.Distribution:
         """
-        Confusion matrix for each labeler (j) and category (c), where each row is a Dirichlet distribution.
+        Confusion matrix for each labeler (j) and category (c), where each row is a
+        Dirichlet distribution.
         """
         return dist.Dirichlet(self.alpha[c])
 
     @bm.random_variable
     def prev(self) -> dist.Distribution:
         """
-        Prevalance for each of the categories in a Dirichlet distribution so it adds up to 1.
+        Prevalance for each of the categories in a Dirichlet distribution so it adds up
+        to 1.
         """
         return dist.Dirichlet(
             torch.ones(self.num_categories) * (1.0 / self.num_categories)
@@ -138,17 +140,20 @@ class CrowdSourcedAnnotation(BaseBeanMachineImplementation):
                     .numpy()
                 )
             # Collect samples from every category for each reviewer
-            # The shape of np.stack(category_samples, axis=1).squeeze(0) is (num_categories, num_iterations, num_categories)
+            # The shape of np.stack(category_samples, axis=1).squeeze(0) is
+            # (num_categories, num_iterations, num_categories)
             individual_reviewer_samples.append(
                 np.stack(category_samples, axis=1).squeeze(0)
             )
 
         # Combine all reviewers to create the final confusion matrix
-        # The shape of individual_reviewer_samples is (k, num_categories, num_iterations, num_categories)
+        # The shape of individual_reviewer_samples is (k, num_categories,
+        # num_iterations, num_categories)
         confusion_matrix_samples = np.array(individual_reviewer_samples)
 
         # Swap axes so they're in the correct order for xr.Dataset format
-        # The final shape of confusion_matrix_samples is (num_iterations, k, num_categories, num_categories)
+        # The final shape of confusion_matrix_samples is (num_iterations, k,
+        # num_categories, num_categories)
         confusion_matrix_samples = np.swapaxes(
             np.swapaxes(confusion_matrix_samples, 0, 2), 1, 2
         )
@@ -157,15 +162,15 @@ class CrowdSourcedAnnotation(BaseBeanMachineImplementation):
             {
                 "prev": (["draw", "num_categories"], prev_samples),
                 "confusion_matrix": (
-                    ["draw", "labelers", "true_category", "observed_category"],
+                    ["draw", "labeler", "true_category", "obs_category"],
                     confusion_matrix_samples,
                 ),
             },
             coords={
                 "draw": np.arange(prev_samples.shape[0]),
                 "num_categories": np.arange(prev_samples.shape[-1]),
-                "labelers": np.arange(confusion_matrix_samples.shape[1]),
+                "labeler": np.arange(confusion_matrix_samples.shape[1]),
                 "true_category": np.arange(confusion_matrix_samples.shape[-2]),
-                "observed_category": np.arange(confusion_matrix_samples.shape[-1]),
+                "obs_category": np.arange(confusion_matrix_samples.shape[-1]),
             },
         )
