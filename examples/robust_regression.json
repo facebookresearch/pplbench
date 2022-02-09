@@ -35,19 +35,6 @@
     {
       "name": "stan",
       "inference": {
-        "class": "inference.VI",
-        "infer_args": {
-          "algorithm": "fullrank"
-        }
-      },
-      "legend": {
-        "color": "purple",
-        "name": "stan-VI-full"
-      }
-    },
-    {
-      "name": "stan",
-      "inference": {
         "class": "inference.MCMC"
       },
       "legend": {
@@ -61,6 +48,18 @@
       },
       "legend": {
         "color": "green"
+      }
+    },
+    {
+      "name": "beanmachine",
+      "inference": {
+        "class": "inference.MCMC",
+        "infer_args": {
+          "algorithm": "GlobalNoUTurnSampler"
+        }
+      },
+      "legend": {
+        "color": "purple"
       }
     }
   ],

@@ -1,7 +1,7 @@
 {
   "model": {
     "class": "n_schools.NSchools",
-    "args": {"n": 20000, "num_states": 20, "num_districts_per_state": 10}
+    "args": {"n": 2000, "num_states": 20, "num_districts_per_state": 10}
   },
   "iterations": 1500,
   "trials": 3,
@@ -14,20 +14,18 @@
       "legend": {"color": "yellow", "name": "jags"}
     },
     {
-      "name": "stan",
+      "name": "beanmachine.graph",
       "inference": {
-        "class": "inference.VI",
-        "infer_args": {"algorithm": "meanfield"}
+        "class": "inference.NMC"
       },
-      "legend": {"color": "red", "name": "stan-VI-mean"}
+      "legend": {"color": "green", "name": "bmgraph-NMC"}
     },
     {
-      "name": "stan",
+      "name": "beanmachine.graph",
       "inference": {
-        "class": "inference.VI",
-        "infer_args": {"algorithm": "fullrank"}
+        "class": "inference.GlobalMCMC"
       },
-      "legend": {"color": "purple", "name": "stan-VI-full"}
+      "legend": {"color": "purple", "name": "bmgraph-NUTS"}
     },
     {
       "name": "stan",

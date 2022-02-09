@@ -37,8 +37,12 @@ class LogisticRegression(BaseBeanMachineImplementation):
         return dist.Normal(self.beta_loc, self.beta_scale).expand((self.k,))
 
     @bm.random_variable
+    def X(self) -> dist.Distribution:
+        return dist.Normal(0.0, 1.0).expand((self.n, self.k))
+
+    @bm.random_variable
     def Y(self) -> dist.Distribution:
-        mu = torch.mv(self.X, self.beta()) + self.alpha()
+        mu = torch.mv(self.X(), self.beta()) + self.alpha()
         return dist.Bernoulli(logits=mu)
 
     def data_to_observations(self, data: xr.Dataset) -> Dict:
@@ -52,10 +56,10 @@ class LogisticRegression(BaseBeanMachineImplementation):
         # transpose the dataset to ensure that it is the way we expect
         data = data.transpose("item", "feature")
 
-        self.X = torch.tensor(data.X.values, dtype=torch.get_default_dtype())
+        X_val = torch.tensor(data.X.values, dtype=torch.get_default_dtype())
         Y_val = torch.tensor(data.Y.values, dtype=torch.get_default_dtype())
 
-        return {self.Y(): Y_val}
+        return {self.X(): X_val, self.Y(): Y_val}
 
     def get_queries(self) -> List:
         return [self.alpha(), self.beta()]
