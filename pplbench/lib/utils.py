@@ -64,7 +64,7 @@ def create_output_dir(config: SimpleNamespace) -> str:
     output_dir = create_subdir(root_dir, timestamp)
     # dump the config file in the output directory
     with open(os.path.join(output_dir, "config.json"), "w") as fp:
-        fp.write(SimpleNamespaceEncoder().encode(config))
+        fp.write(convert_to_readable_string(SimpleNamespaceEncoder().encode(config)))
     # redirect C stdout and stderr to files to avoid cluttering user's display
     # but keep Python stdout and stderr intact
     for sname in ["stdout", "stderr"]:
@@ -111,3 +111,31 @@ def save_dataset(output_dir: str, name_prefix: str, ds: xr.Dataset) -> None:
             os.path.join(subdir, f"{varname}.csv")
         )
     LOGGER.info(f"saved {name_prefix}")
+
+
+def convert_to_readable_string(input: str):
+    intermediate = ""
+    for character in input:
+        if character == " ":
+            pass
+        else:
+            intermediate = intermediate + character
+
+    indent = "   "
+    indent_level = 0
+    output = ""
+    for character in intermediate:
+        if character == "}" or character == "]":
+            indent_level = indent_level - 1
+            output = output + "\n" + indent * indent_level + character
+        elif character == "{" or character == "[":
+            indent_level = indent_level + 1
+            output = output + character + "\n" + indent * indent_level
+        elif character == ",":
+            output = output + character + "\n" + indent * indent_level
+        elif character == ":":
+            output = output + character + " "
+        else:
+            output = output + character
+    output = output + "\n"
+    return output
