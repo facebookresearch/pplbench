@@ -42,6 +42,11 @@ SCHEMA = {
         "iterations": {"type": "integer", "minimum": 1},
         "num_warmup": {"type": "integer", "minimum": 0},
         "trials": {"type": "integer", "minimum": 2},
+        "profile_run": {"type": "boolean"},
+        "num_profiled": {"type": "integer"},
+        "strip_profiled_names": {"type": "boolean"},
+        "profiling_tools_dir": {"type": "string"},
+        "profiling_type": {"type": "string", "enum": ["deterministic", "statistical"]},
         "ppls": {
             "type": "array",
             "items": {
