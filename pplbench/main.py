@@ -122,6 +122,11 @@ def main(args: Optional[List[str]] = None) -> None:
     config = read_config(args)
     output_dir = utils.create_output_dir(config)
     configure_logging(config, output_dir)
+    # only import profiler if needed
+    if hasattr(config, "profile_run") and config.profile_run:
+        from .lib.ppl_profiler import PPL_Profiler
+
+        ppl_profiler = PPL_Profiler(output_dir, config)
     model_cls = model_helper.find_model_class(config.model)
     all_ppl_details = ppl_helper.find_ppl_details(config)
     # then start the actual benchmarking run
@@ -140,6 +145,8 @@ def main(args: Optional[List[str]] = None) -> None:
         all_variable_metrics_data,
         all_other_metrics_data,
     )
+    if hasattr(config, "profile_run") and config.profile_run:
+        ppl_profiler.finish_profiling()
     # The last output should be the name of the directory
     LOGGER.info(f"Output saved in '{output_dir}'")
 

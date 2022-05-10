@@ -9,6 +9,7 @@ import beanmachine.graph as bmg
 import numpy as np
 import xarray as xr
 
+from ....lib.ppl_profiler import start_profiling_BMG
 from ...base_ppl_impl import BasePPLImplementation
 from ...base_ppl_inference import BasePPLInference
 from .base_bmgraph_impl import BaseBMGraphImplementation
@@ -38,6 +39,7 @@ class NMC(BaseBMGraphInference):
         **infer_args
     ) -> xr.Dataset:
         self.impl.bind_data_to_bmgraph(data)
+        start_profiling_BMG(self.impl.graph)
         samples = np.array(
             self.impl.graph.infer(iterations, bmg.InferenceType.NMC, seed)
         )
@@ -58,6 +60,7 @@ class GlobalMCMC(BaseBMGraphInference):
     ) -> xr.Dataset:
         self.impl.bind_data_to_bmgraph(data)
         inference_cls = getattr(bmg, algorithm)
+        start_profiling_BMG(self.impl.graph)
         mcmc = inference_cls(self.impl.graph, *(infer_args.values()))
         samples = np.array(mcmc.infer(iterations, seed, num_warmup))
         return self.impl.format_samples_from_bmgraph(samples)
