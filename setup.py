@@ -20,7 +20,7 @@ PPLS_REQUIRE = [
     "numpyro>=0.3.0",
     "beanmachine>=0.1.1",
 ]
-DEV_REQUIRE = PPLS_REQUIRE + ["black==21.4b2", "flake8", "mypy", "usort"]
+DEV_REQUIRE = PPLS_REQUIRE + ["black==22.3.0", "flake8", "mypy", "usort"]
 
 
 # Check for python version
