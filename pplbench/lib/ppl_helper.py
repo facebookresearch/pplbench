@@ -72,7 +72,7 @@ def find_ppl_details(config: SimpleNamespace) -> List[PPLDetails]:
                         "L", hashlib.sha256(bytes(name, "utf-8")).digest()[:8]
                     )[0]
                 )
-                / 2 ** 64
+                / 2**64
             )
 
         def _get_color(name):
