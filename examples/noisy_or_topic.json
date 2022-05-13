@@ -48,7 +48,7 @@
       "inference": {
         "class": "inference.MCMC",
         "infer_args": {
-          "algorithm": "SingleSiteNewtonianMonteCarlo"
+          "algorithm": "SingleSiteAncestralMetropolisHastings"
         }
       },
       "legend": {"color": "purple", "name": "bm"}

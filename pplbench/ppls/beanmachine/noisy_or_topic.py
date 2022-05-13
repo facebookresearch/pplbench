@@ -74,7 +74,7 @@ class NoisyOrTopic(BaseBeanMachineImplementation):
                         .squeeze(0),
                         1
                     )
-                    for j in range(1 + self.num_topics)
+                    for j in range(self.num_topics + 1)
                 ),
                 axis=1,
             )
@@ -86,6 +86,6 @@ class NoisyOrTopic(BaseBeanMachineImplementation):
             },
             coords={
                 "draw": np.arange(len(active0_samples)),
-                "topic": np.arange(1 + self.num_topics),
+                "topic": np.arange(self.num_topics + 1),
             },
         )
