@@ -42,6 +42,16 @@
         "color": "yellow",
         "name": "jags"
       }
+    },
+    {
+      "name": "beanmachine",
+      "inference": {
+        "class": "inference.MCMC",
+        "infer_args": {
+          "algorithm": "SingleSiteAncestralMetropolisHastings"
+        }
+      },
+      "legend": {"color": "purple", "name": "bm"}
     }
   ],
   "save_samples": true,
