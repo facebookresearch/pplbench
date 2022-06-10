@@ -33,7 +33,7 @@ class MCMC(BasePyMC3Inference):
         num_warmup: int,
         seed: int,
         algorithm: str = "NUTS",
-        **infer_args
+        **infer_args,
     ) -> xr.Dataset:
 
         model = self.impl.get_model(data)
@@ -64,7 +64,7 @@ class VI(BasePyMC3Inference):
         num_warmup: int,
         seed: int,
         algorithm: str = "ADVI",
-        **infer_args
+        **infer_args,
     ) -> xr.Dataset:
 
         model = self.impl.get_model(data)

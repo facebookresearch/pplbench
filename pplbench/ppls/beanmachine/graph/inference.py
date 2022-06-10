@@ -36,7 +36,7 @@ class NMC(BaseBMGraphInference):
         iterations: int,
         num_warmup: int,
         seed: int,
-        **infer_args
+        **infer_args,
     ) -> xr.Dataset:
         self.impl.bind_data_to_bmgraph(data)
         start_profiling_BMG(self.impl.graph)
@@ -56,7 +56,7 @@ class GlobalMCMC(BaseBMGraphInference):
         num_warmup: int,
         seed: int,
         algorithm: str = "NUTS",
-        **infer_args
+        **infer_args,
     ) -> xr.Dataset:
         self.impl.bind_data_to_bmgraph(data)
         inference_cls = getattr(bmg, algorithm)

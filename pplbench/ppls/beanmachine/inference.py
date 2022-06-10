@@ -35,7 +35,7 @@ class MCMC(BaseBMInference):
         num_warmup: int,
         seed: int,
         algorithm: str = "SingleSiteRandomWalk",
-        **infer_args
+        **infer_args,
     ) -> xr.Dataset:
         torch.manual_seed(seed)
         # Dynamically choosing the algorithm from inference module

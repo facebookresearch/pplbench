@@ -46,7 +46,7 @@ class BasePPLInference(ABC):
         iterations: int,
         num_warmup: int,
         seed: int,
-        **infer_args
+        **infer_args,
     ) -> xr.Dataset:
         """
         Run inference and return samples. The number of samples returned by this method

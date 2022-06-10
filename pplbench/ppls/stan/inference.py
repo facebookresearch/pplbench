@@ -27,7 +27,7 @@ class BaseStanInference(BasePPLInference):
         self.stan_model = StanModel(
             model_code=self.impl.get_code(),
             model_name=self.impl_class.__name__,
-            **compile_args
+            **compile_args,
         )
 
 
@@ -39,7 +39,7 @@ class MCMC(BaseStanInference):
         num_warmup: int,
         seed: int,
         algorithm: str = "NUTS",
-        **infer_args
+        **infer_args,
     ) -> xr.Dataset:
         """
         See https://pystan.readthedocs.io/en/latest/api.html#pystan.StanModel.vb
@@ -54,7 +54,7 @@ class MCMC(BaseStanInference):
             check_hmc_diagnostics=False,
             seed=seed,
             algorithm=algorithm,
-            **infer_args
+            **infer_args,
         )
         results = self.fit.extract(
             permuted=False, inc_warmup=True, pars=self.impl.get_pars()
