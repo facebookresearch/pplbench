@@ -25,7 +25,8 @@
       "inference": {
         "class": "inference.GlobalMCMC",
         "infer_args": {
-          "mass_matrix": true
+          "mass_matrix": true,
+          "multinomial_sampling": true
         }
       },
       "legend": {"color": "purple", "name": "bmgraph-NUTS"}
