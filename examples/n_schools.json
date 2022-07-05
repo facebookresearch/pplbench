@@ -23,7 +23,10 @@
     {
       "name": "beanmachine.graph",
       "inference": {
-        "class": "inference.GlobalMCMC"
+        "class": "inference.GlobalMCMC",
+        "infer_args": {
+          "mass_matrix": true
+        }
       },
       "legend": {"color": "purple", "name": "bmgraph-NUTS"}
     },

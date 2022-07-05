@@ -62,5 +62,5 @@ class GlobalMCMC(BaseBMGraphInference):
         inference_cls = getattr(bmg, algorithm)
         start_profiling_BMG(self.impl.graph)
         mcmc = inference_cls(self.impl.graph, *(infer_args.values()))
-        samples = np.array(mcmc.infer(iterations, seed, num_warmup))
+        samples = np.array(mcmc.infer(iterations - num_warmup, seed, num_warmup, True))
         return self.impl.format_samples_from_bmgraph(samples)
