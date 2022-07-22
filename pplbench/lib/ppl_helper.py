@@ -275,7 +275,7 @@ def collect_samples_and_stats(
     # save the samples data only if requested
     if getattr(config, "save_samples", False):
         save_dataset(output_dir, "samples", all_samples_data)
-    # write out thes metrics
+    # write out the metrics
     save_dataset(output_dir, "diagnostics", all_variable_metrics_data)
     save_dataset(output_dir, "metrics", all_other_metrics_data)
     return all_variable_metrics_data, all_other_metrics_data
