@@ -147,6 +147,14 @@ def main(args: Optional[List[str]] = None) -> None:
     )
     if hasattr(config, "profile_run") and config.profile_run:
         ppl_profiler.finish_profiling()
+
+    from .ppls.beanmachine.graph.inference import bmg_stats
+
+    if bmg_stats is not None:
+        stat_filename = output_dir + "/BMG_stats.txt"
+        with open(stat_filename, "w") as stat_file:
+            stat_file.write(str(bmg_stats))
+
     # The last output should be the name of the directory
     LOGGER.info(f"Output saved in '{output_dir}'")
 
