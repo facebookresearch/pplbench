@@ -14,6 +14,8 @@ from ...base_ppl_impl import BasePPLImplementation
 from ...base_ppl_inference import BasePPLInference
 from .base_bmgraph_impl import BaseBMGraphImplementation
 
+bmg_stats = None
+
 
 class BaseBMGraphInference(BasePPLInference):
     def __init__(
@@ -39,6 +41,12 @@ class NMC(BaseBMGraphInference):
         **infer_args,
     ) -> xr.Dataset:
         self.impl.bind_data_to_bmgraph(data)
+        global bmg_stats
+        try:
+            if bmg_stats is None:
+                bmg_stats = self.impl.graph.collect_statistics()
+        except BaseException:
+            bmg_stats = None
         start_profiling_BMG(self.impl.graph)
         samples = np.array(
             self.impl.graph.infer(iterations, bmg.InferenceType.NMC, seed)
@@ -60,6 +68,12 @@ class GlobalMCMC(BaseBMGraphInference):
     ) -> xr.Dataset:
         self.impl.bind_data_to_bmgraph(data)
         inference_cls = getattr(bmg, algorithm)
+        global bmg_stats
+        try:
+            if bmg_stats is None:
+                bmg_stats = self.impl.graph.collect_statistics()
+        except BaseException:
+            bmg_stats = None
         start_profiling_BMG(self.impl.graph)
         mcmc = inference_cls(self.impl.graph, *(infer_args.values()))
         samples = np.array(mcmc.infer(iterations - num_warmup, seed, num_warmup, True))
