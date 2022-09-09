@@ -18,7 +18,7 @@ PPLS_REQUIRE = [
     "pymc3>=3.11.0",
     "pyro-ppl>=0.4.1",
     "numpyro>=0.3.0",
-    "beanmachine>=0.1.1",
+    "beanmachine>=0.2.0",
 ]
 DEV_REQUIRE = PPLS_REQUIRE + ["black==22.3.0", "flake8", "mypy", "usort"]
 
