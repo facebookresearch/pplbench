@@ -5,6 +5,7 @@
 
 from typing import cast, Dict, Type
 
+import beanmachine.ppl as bm
 import torch
 import xarray as xr
 from beanmachine.ppl import inference
@@ -34,10 +35,11 @@ class MCMC(BaseBMInference):
         iterations: int,
         num_warmup: int,
         seed: int,
-        algorithm: str = "SingleSiteRandomWalk",
+        algorithm: str = "CompositionalInference",
         **infer_args,
     ) -> xr.Dataset:
-        torch.manual_seed(seed)
+        bm.seed(seed)
+
         # Dynamically choosing the algorithm from inference module
         inference_cls = getattr(inference, algorithm)
 
