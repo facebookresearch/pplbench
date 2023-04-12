@@ -25,7 +25,7 @@ def find_model_class(mconfig: SimpleNamespace) -> Type[BaseModel]:
     :returns: An instantiated model class object.
     """
     # find the model
-    package = mconfig.package if hasattr(mconfig, "package") else "pplbench.models"
+    package = getattr(mconfig, "package", "pplbench.models")
     class_name = getattr(mconfig, "class")
     mclass = load_class_or_exit(package + "." + class_name)
     return mclass
@@ -39,7 +39,7 @@ def simulate_data(
     :param model_cls: model implementation class
     :returns: Training and test datasets
     """
-    seed = mconfig.seed if hasattr(mconfig, "seed") else int(time.time())
+    seed = getattr(mconfig, "seed", int(time.time()))
     LOGGER.info(f"model seed {seed}")
     kwargs = mconfig.args.__dict__ if hasattr(mconfig, "args") else {}
     kwargs["seed"] = seed
