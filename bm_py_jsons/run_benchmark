@@ -1,4 +1,0 @@
-for i in *.json
-do
-buck run @mode/opt //beanmachine/benchmarks/pplbench:main -- $i
-done
