@@ -1,0 +1,166 @@
+# this name will be shown on the status badge in README.md in the form "build | passing"
+name: build
+
+on:
+  push:
+    branches-ignore:
+      - gh-pages
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      matrix:
+        python-version: [3.7]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Upgrade pip
+      run: python -m pip install --upgrade pip
+
+    - name: Install linters
+      run: >
+        pip install black==22.3.0 flake8==4.0.1 libcst==0.4.1 ufmt==1.3.2 usort==1.0.2
+        mypy==0.782
+
+    - name: Lint with flake8
+      run: flake8 .
+
+    - name: Lint with ufmt (black + usort)
+      run: ufmt check .
+
+    - name: Install PPL Bench core
+      run: pip install .
+
+    - name: Lint with mypy
+      run: mypy -p pplbench
+
+  find_example_json:
+    runs-on: ubuntu-latest
+    outputs:
+      files: ${{ steps.glob.outputs.files }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Recursively search for example JSON files
+      id: glob
+      run: |
+        JSON_FILES=$(find . -type f -wholename '*/examples/*.json' \
+          | jq -Rsc 'split("\n")[:-1]')  # format output of `find` to an JSON array
+        echo "::set-output name=files::$(echo $JSON_FILES)"
+
+  test_example_json:
+    name: Test ${{ matrix.test-file }} (Python ${{ matrix.python-version  }})
+    runs-on: ubuntu-latest
+    needs:
+      - find_example_json
+    strategy:
+      matrix:
+        python-version: [3.7]
+        test-file: ${{ fromJson(needs.find_example_json.outputs.files) }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Upgrade pip
+      run: python -m pip install --upgrade pip
+
+    - name: Install PPL Bench with all PPLs
+      run: |
+        pip install .[ppls]
+        # Install Jags-related dependencies
+        sudo apt install pkg-config jags
+        pip install pyjags
+
+    - name: Run PPL Bench with ${{ matrix.test-file }}
+      run: pplbench ${{ matrix.test-file }}
+
+  check_version:
+    runs-on: ubuntu-latest
+    # check the current repository so the pypi release workflow won't be run on forks
+    if: github.event_name == 'push' && github.repository == 'facebookresearch/pplbench'
+    needs:
+      - lint
+      - test_example_json
+    outputs:
+      has_updated: ${{ steps.version.outputs.has_updated }}
+      version_tag: ${{ steps.version.outputs.version_tag }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.7
+
+    - name: See if a tag exists for current version of PPL Bench
+      id: version
+      run: |
+        VERSION_TAG="v$(python setup.py --version)"
+        if  [[ $(git ls-remote --tags origin refs/tags/$VERSION_TAG) ]]; then
+          # there exists a tag with same name as current version
+          echo "::set-output name=has_updated::false"
+        else
+          echo "::set-output name=has_updated::true"
+        fi
+        echo "::set-output name=version_tag::$(echo $VERSION_TAG)"
+        echo "The current version of PPL Bench is $VERSION_TAG"
+
+  release_and_upload_pplbench:
+    name: Release PPL Bench
+    runs-on: ubuntu-latest
+    needs:
+      - check_version
+    if: needs.check_version.outputs.has_updated == 'true'
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.7
+
+    - name: Upgrade pip
+      run: python -m pip install --upgrade pip
+
+    - name: Install package dependencies
+      run: pip install setuptools wheel
+
+    - name: Build source distribution
+      run: python setup.py sdist
+
+    - name: Build Python 3 wheel
+      run: python setup.py bdist_wheel
+
+    - name: Upload PPL Bench to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        password: ${{ secrets.PYPI_PASSWORD }}
+
+    - name: Create new release on GitHub
+      uses: actions/create-release@v1
+      with:
+        tag_name: ${{ needs.check_version.outputs.version_tag }}
+        release_name: PPL Bench ${{ needs.check_version.outputs.version_tag }}
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

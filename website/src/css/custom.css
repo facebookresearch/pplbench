@@ -1,0 +1,70 @@
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * @format
+ */
+
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+
+:root {
+  --ifm-color-primary: #7379cf;
+  --ifm-color-primary-dark: #5b62c7;
+  --ifm-color-primary-darker: #4f57c3;
+  --ifm-color-primary-darkest: #3a41a8;
+  --ifm-color-primary-light: #8b90d7;
+  --ifm-color-primary-lighter: #979bdb;
+  --ifm-color-primary-lightest: #bbbee8;
+}
+
+.docusaurus-highlight-code-line {
+  background-color: rgb(72, 77, 91);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+}
+
+/* Announcement banner */
+
+:root {
+  --docusaurus-announcement-bar-height: auto !important;
+}
+
+div[class^="announcementBarContent"] {
+  line-height: 40px;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 8px 30px;
+}
+
+div[class^="announcementBarContent"] a {
+  text-decoration: underline;
+  display: inline-block;
+  color: var(--ifm-color-primary-lightest) !important;
+}
+
+div[class^="announcementBarContent"] a:hover {
+  color: var(--brand) !important;
+}
+
+@media only screen and (max-width: 768px) {
+  .announcement {
+    font-size: 18px;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .announcement {
+    font-size: 15px;
+    line-height: 22px;
+    padding: 6px 30px;
+  }
+}

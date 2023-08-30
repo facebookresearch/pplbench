@@ -1,0 +1,86 @@
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * @format
+ */
+
+/**
+ * CSS files with the .module.css suffix will be treated as CSS modules
+ * and scoped locally.
+ */
+
+.heroBanner {
+  padding: 4rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 966px) {
+  .heroBanner {
+    padding: 2rem;
+  }
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.features {
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+  width: 100%;
+}
+
+.featureImage {
+  height: 200px;
+  width: 200px;
+}
+
+.getStarted {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+  color: white !important;
+}
+
+.features {
+  display: flex;
+  align-items: center;
+  padding: 4rem 0;
+  width: 100%;
+}
+
+.featureImage {
+  margin: 0 auto;
+}
+
+.gettingStartedSection {
+  background-color: #f7f7f7;
+}
+
+.gettingStartedSection ol {
+  list-style: none;
+  padding-bottom: 100;
+}
+
+.gettingStartedSection li {
+  padding-bottom: 100;
+  margin: 20px 0;
+}
+
+.gettingStartedSection a {
+  color: #4f57c3;
+  text-decoration: inherit;
+}
+
+html[data-theme='dark'] .gettingStartedSection {
+  background-color: #33363b;
+}
