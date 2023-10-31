@@ -59,7 +59,21 @@
         }
       },
       "legend": {
-        "color": "purple"
+        "color": "purple",
+        "name": "beanmachine-NUTS"
+      }
+    },
+    {
+      "name": "beanmachine",
+      "inference": {
+        "class": "inference.VI",
+        "infer_args": {
+          "algorithm": "ADVI"
+        }
+      },
+      "legend": {
+        "color": "blue",
+        "name": "beanmachine-ADVI"
       }
     },
     {
@@ -68,7 +82,7 @@
         "class": "inference.MCMC",
         "infer_args": {"algorithm": "NUTS"}
       },
-      "legend": {"color": "orange", "name": "numpyro"}
+      "legend": {"color": "orange", "name": "numpyro-NUTS"}
     }
   ],
   "save_samples": true,
