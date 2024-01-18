@@ -60,7 +60,7 @@ jobs:
       run: |
         JSON_FILES=$(find . -type f -wholename '*/examples/*.json' \
           | jq -Rsc 'split("\n")[:-1]')  # format output of `find` to an JSON array
-        echo "::set-output name=files::$(echo $JSON_FILES)"
+        echo "files=$(echo $JSON_FILES)" >> $GITHUB_OUTPUT
 
   test_example_json:
     name: Test ${{ matrix.test-file }} (Python ${{ matrix.python-version  }})
@@ -118,11 +118,11 @@ jobs:
         VERSION_TAG="v$(python setup.py --version)"
         if  [[ $(git ls-remote --tags origin refs/tags/$VERSION_TAG) ]]; then
           # there exists a tag with same name as current version
-          echo "::set-output name=has_updated::false"
+          echo "has_updated=false" >> $GITHUB_OUTPUT
         else
-          echo "::set-output name=has_updated::true"
+          echo "has_updated=true" >> $GITHUB_OUTPUT
         fi
-        echo "::set-output name=version_tag::$(echo $VERSION_TAG)"
+        echo "version_tag=$(echo $VERSION_TAG)" >> $GITHUB_OUTPUT
         echo "The current version of PPL Bench is $VERSION_TAG"
 
   release_and_upload_pplbench:
